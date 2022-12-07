@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class Bdd {
+public class Bdd {      // connection ä la bdd
     public static Session connect_db(){
             return GraphDatabase.driver("bolt://localhost:7687").session();
     }
