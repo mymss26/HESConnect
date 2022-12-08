@@ -7,7 +7,7 @@ public class Evenement {
     String nomEvenement;
     List<String> thematique;
 
-    public Evenement(String nomEvenement, List<String> thematique) {
+    public Evenement(String nomEvenement, List<String> thematique) {  // !!!!AJOUTER LA VILLE OU LIEU DE L EVENEMENT
         this.nomEvenement = nomEvenement;
         this.thematique = thematique;
     }

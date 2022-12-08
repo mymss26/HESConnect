@@ -9,6 +9,7 @@ public class Applic {
      Bdd.setup_env(bdd);
      Bdd.chargerDataPersonne(bdd);
      Bdd.chargerDataEvenement(bdd);
+     Bdd.chargerDataHES(bdd);
   }
 
 }

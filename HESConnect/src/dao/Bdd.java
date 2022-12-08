@@ -1,6 +1,7 @@
 package dao;
 
 import domaine.Evenement;
+import domaine.HES;
 import domaine.Personne;
 import metier.FabriquePersonne;
 import metier.FabriquePersonnes;
@@ -40,5 +41,9 @@ public class Bdd {      // connection ä la bdd
         for(Evenement data : evenement){
             bdd.run("CREATE(:Evenement{titre:'"+data.getNomEvenement()+"',thematique:'"+data.getThematique()+"'})");
         }
+    }
+
+    public static void chargerDataHES(Session bdd){
+            bdd.run("CREATE(:HES{nom:'"+new HES()+"'})");
     }
 }
