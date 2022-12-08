@@ -4,12 +4,12 @@ public abstract class Personne {
     String nom,prenom,mail,genre;
     int codePostal;
 
-    public Personne(String nom, String prenom, String mail, String genre, int codePostal) {
+    public Personne(String nom, String prenom, String mail, String genre/*, int codePostal*/) {
         this.nom = nom;
         this.prenom = prenom;
         this.mail = mail;
         this.genre = genre;
-        this.codePostal = codePostal;
+        //this.codePostal = codePostal;
     }
 
     public String getNom() {
