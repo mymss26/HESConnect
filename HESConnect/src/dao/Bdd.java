@@ -13,12 +13,6 @@ import java.util.List;
 
 public class Bdd {      // connection ä la bdd
 
-    List<Personne> listeEtudiant = new ArrayList<>();
-    List<Personne> listeAssitant = new ArrayList<>();
-    List<Personne> listeProfesseur = new ArrayList<>();
-
-
-
     public static Session connect_db(){
             return GraphDatabase.driver("bolt://localhost:7687").session();
     }
@@ -42,39 +36,23 @@ public class Bdd {      // connection ä la bdd
     }
 
 
-    /**TESTTTTTT**/
-    public static List<Personne> chargerDataPersonneTEST(Session bdd){
-        FabriquePersonne fabrique = new FabriquePersonnes();
-        List<String[]> personnes = Data.listePersonnes();
-        List<Personne> listeEtu = new ArrayList<>();
-        List<Personne> listeProf = new ArrayList<>();
-        List<Personne> listeAssitant = new ArrayList<>();
-        for(String[] data : personnes){
-            Personne p = null;
-            p = fabrique.nouvellePersonne(data);
-            bdd.run("CREATE (:"+data[4]+"{nom:'"+p.getNom()+"',prenom:'"+p.getPrenom()+"',mail:'"+p.getMail()+"',genre:'"+p.getGenre()+"'})");
-            switch (data[4]){
-                case "ASSISTANT":
-
-                    break;
-                case "ETUDIANT":
-                    getListeEtudiant(p);
-                    break;
-                case "PROFESSEUR":
-                    getListeProf(p);
-                    break;
-            }
-        }
-        return null;
-    }
 
 
-    public static List<Personne> getListeEtudiant(Personne personne){
+    /** TESTTT*/
+    public static List<Personne> getListeEtudiant(){
         FabriquePersonne fabrique = new FabriquePersonnes();
         List<String[]> personnes = Data.listePersonnes();
 
         List<Personne> listeEtudiant = new ArrayList<>();
-        listeEtudiant.add(personne);
+
+        for(String[] data : personnes) {
+            Personne p = null;
+            p = fabrique.nouvellePersonne(data);
+            switch (data[4]){
+                case "ASSISTANT":
+                    listeEtudiant.add(p);
+            }
+        }
         return listeEtudiant;
     }
 
