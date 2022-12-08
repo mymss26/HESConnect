@@ -43,7 +43,7 @@ public class Bdd {      // connection ä la bdd
         }
     }
 
-    public static void chargerDataHES(Session bdd){
-            bdd.run("CREATE(:HES{nom:'"+new HES()+"'})");
-    }
+   /* public static void chargerDataHES(Session bdd){
+            bdd.run("CREATE(:HES{nom:'"+new HES(null, null)+"'})");
+    }*/
 }

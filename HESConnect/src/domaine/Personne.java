@@ -2,12 +2,14 @@ package domaine;
 
 public abstract class Personne {
     String nom,prenom,mail,genre;
+    int codePostal;
 
-    public Personne(String nom, String prenom, String mail, String genre) {
+    public Personne(String nom, String prenom, String mail, String genre, int codePostal) {
         this.nom = nom;
         this.prenom = prenom;
         this.mail = mail;
         this.genre = genre;
+        this.codePostal = codePostal;
     }
 
     public String getNom() {
@@ -26,24 +28,12 @@ public abstract class Personne {
         return genre;
     }
 
-    public void setNom(String nom) {
-        this.nom = nom;
-    }
-
-    public void setPrenom(String prenom) {
-        this.prenom = prenom;
-    }
-
-    public void setMail(String mail) {
-        this.mail = mail;
-    }
-
-    public void setGenre(String genre) {
-        this.genre = genre;
+    public int getCodePostal() {
+        return codePostal;
     }
 
     @Override
     public String toString() {
-        return "nom" + nom +", prenom:" + prenom +", mail:" + mail +", genre:" + genre;
+        return "nom" + nom +", prenom:" + prenom +", mail:" + mail +", genre:" + genre +", code postal :"+codePostal;
     }
 }
