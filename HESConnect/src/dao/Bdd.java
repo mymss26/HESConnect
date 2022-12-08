@@ -1,5 +1,6 @@
 package dao;
 
+import domaine.Evenement;
 import domaine.Personne;
 import metier.FabriquePersonne;
 import metier.FabriquePersonnes;
@@ -31,7 +32,13 @@ public class Bdd {      // connection ä la bdd
            p = fabrique.nouvellePersonne(data);
            bdd.run("CREATE (:"+data[4]+"{nom:'"+p.getNom()+"',prenom:'"+p.getPrenom()+"',mail:'"+p.getMail()+"',genre:'"+p.getGenre()+"'})");
        }
+    }
 
 
+    public static void chargerDataEvenement(Session bdd){
+        List<Evenement> evenement = Data.listeEvenement();
+        for(Evenement data : evenement){
+            bdd.run("CREATE(:Evenement{titre:'"+data.getNomEvenement()+"',thematique:'"+data.getThematique()+"'})");
+        }
     }
 }

@@ -1,7 +1,7 @@
 package dao;
 
-import domaine.Personne;
-import metier.FabriquePersonne;
+import domaine.Evenement;
+
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -11,10 +11,11 @@ import java.util.List;
 
 public class Data {
 
-    private static final String FILENAME = "PERSONNES.csv";
+    private static final String FILENAME_Personne = "PERSONNES.csv";
+    private static final String FILENAME_Evenement= "EVENEMENTS.csv";
     public static List<String[]> listePersonnes() {
         try {
-            BufferedReader reader  = new BufferedReader(new FileReader(FILENAME));
+            BufferedReader reader  = new BufferedReader(new FileReader(FILENAME_Personne));
             List<String[]> lstPersonne = new ArrayList<>();
             String ligne;
             while ((ligne = reader.readLine()) != null) {
@@ -25,4 +26,30 @@ public class Data {
             return lstPersonne;
         } catch (IOException e) {  e.printStackTrace(); return null; }
     }
+
+    public static List<Evenement> listeEvenement() {
+        try {
+            BufferedReader reader  = new BufferedReader(new FileReader(FILENAME_Evenement));
+            List<Evenement> lstEvenement= new ArrayList<>();
+            String ligne;
+            while ((ligne = reader.readLine()) != null) {
+                String[] data = ligne.split(";");
+                ArrayList<String> lstThematique = new ArrayList<>();
+                if(data.length>1) {
+                    for (int i = 1; i < data.length; i++) {
+                        lstThematique.add(data[i]);
+                    }
+                }
+                else{
+                lstThematique.add(data[1]);}
+                lstEvenement.add(new Evenement(data[0],lstThematique));
+            }
+            reader.close();
+            return lstEvenement;
+        } catch (IOException e) {  e.printStackTrace(); return null; }
+    }
+
+
+
+
 }
