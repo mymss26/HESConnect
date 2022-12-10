@@ -34,6 +34,6 @@ public abstract class Personne {
 
     @Override
     public String toString() {
-        return "nom" + nom +", prenom:" + prenom +", mail:" + mail +", genre:" + genre +", code postal :"+codePostal;
+        return "nom: " + nom +", prenom:" + prenom +", mail:" + mail +", genre:" + genre +", code postal :"+codePostal;
     }
 }

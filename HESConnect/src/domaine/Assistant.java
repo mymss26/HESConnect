@@ -7,6 +7,6 @@ public class Assistant extends Personne{
 
     @Override
     public String toString() {
-        return "Assistant:"+super.toString();
+        return "Assistant : "+super.toString();
     }
 }
