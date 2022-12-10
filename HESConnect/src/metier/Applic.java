@@ -10,6 +10,7 @@ public class Applic {
      Bdd.chargerDataPersonne(bdd);
      Bdd.chargerDataEvenement(bdd);
      Bdd.chargerDataHES(bdd);
+     Bdd.relationPersonnesAvecEcoles(bdd);
   }
 
 }
