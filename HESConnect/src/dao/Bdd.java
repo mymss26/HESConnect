@@ -11,7 +11,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-public class Bdd {      // connection ä la bdd
+public class Bdd {      // connection à la bdd
 
     static List<Personne> listeEtudiants = new ArrayList<>();
     static List<Personne> listeProfesseurs = new ArrayList<>();
