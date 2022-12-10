@@ -1,8 +1,10 @@
 package domaine;
 
 public class Assistant extends Personne{
-    public Assistant(String nom, String prenom, String mail, String genre) {
-        super(nom, prenom, mail, genre);
+
+
+    public Assistant(String nom, String prenom, String mail, String genre, int codePostal) {
+        super(nom, prenom, mail, genre, codePostal);
     }
 
     @Override
