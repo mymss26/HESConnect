@@ -13,13 +13,15 @@ public class Main {
     public static void main(String[] args) {
         new Applic();
 
+
+
         for(Personne p : Bdd.getListeEtudiant()){
             if(p.getMail().contains("@heg.ch")) {
-                //System.out.println(p);
+                System.out.println(p);
             }
         }
 
-
+/**
         for(HES e : Bdd.getListeEcoles()){
             //System.out.println(e);
         }
@@ -86,7 +88,7 @@ public class Main {
         //System.out.println(listAssistantsHEDS.size());
         //System.out.println(listAssistantssHETS.size());
 
-
+    */
 
     }
 }

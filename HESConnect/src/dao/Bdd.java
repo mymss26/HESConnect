@@ -34,15 +34,8 @@ public class Bdd {      // connection à la bdd
            Personne p = null;
            p = fabrique.nouvellePersonne(data);
 
-           /**
-            *
-            * Regarder si c'est pas mieux de au lieu de créer un noeud Assistant, Prof & Etudiant => on crée slmt un type Personne
-            * voir pour apres les relations
-            *
-            * **/
-
-           bdd.run("CREATE (:"+data[4]+"{nom:'"+p.getNom()+"',prenom:'"+p.getPrenom()+"',mail:'"+p.getMail()+"',genre:'"+p.getGenre()+"'})");
-           switch (data[4]){
+           bdd.run("CREATE (:"+data[5]+"{nom:'"+p.getNom()+"',prenom:'"+p.getPrenom()+"',mail:'"+p.getMail()+"',genre:'"+p.getGenre()+"', codePostal:'"+p.getCodePostal()+"'})");
+           switch (data[5]){
                case "ETUDIANT": listeEtudiants.add(p);break;
                case "ASSISTANT": listeAssistants.add(p);break;
                case "PROFESSEUR": listeProfesseurs.add(p);break;
