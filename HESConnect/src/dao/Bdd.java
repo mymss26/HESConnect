@@ -108,14 +108,14 @@ public class Bdd {
 
         for(String[] data : filiere){
             ArrayList<String> lstCompetences = new ArrayList<>();
-            if(data.length>1) {
+            if(data.length>2) {
                 for (int i = 1; i < data.length; i++) {
                     lstCompetences.add(data[i]);
                 }
             }
             else{
-                lstCompetences.add(data[1]);}
-            lstFiliere.add(new Filiere(data[0],lstCompetences));
+                lstCompetences.add(data[2]);}
+            lstFiliere.add(new Filiere(data[1],lstCompetences));
         }
         return lstFiliere;
         }
