@@ -11,6 +11,8 @@ public class Applic {
      Bdd.chargerDataEvenement(bdd);
      Bdd.chargerDataHES(bdd);
      Bdd.relationPersonnesAvecEcoles(bdd);
+     Bdd.relationPersonnesAvecAutresPersonnes(bdd);
+      System.out.println("Process executed");
   }
 
 }
