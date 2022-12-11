@@ -35,7 +35,7 @@ public class Bdd {      // connection à la bdd
            Personne p = null;
            p = fabrique.nouvellePersonne(data);
 
-           bdd.run("CREATE (:"+data[5]+"{nom:'"+p.getNom()+"',prenom:'"+p.getPrenom()+"',mail:'"+p.getMail()+"',genre:'"+p.getGenre()+"', codePostal:'"+p.getCodePostal()+"'})");
+           bdd.run("CREATE (:PERSONNE{nom:'"+p.getNom()+"',prenom:'"+p.getPrenom()+"',mail:'"+p.getMail()+"',genre:'"+p.getGenre()+"', codePostal:'"+p.getCodePostal()+"'})");
            switch (data[5]){
                case "ETUDIANT": listeEtudiants.add(p);break;
                case "ASSISTANT": listeAssistants.add(p);break;
@@ -100,23 +100,17 @@ public class Bdd {      // connection à la bdd
     }
 
 
-    /**
-     *
-     * Faires les relations
-     * Peut etre on peut mieux automatiser tout ca...
-     *
-     * */
     public static void relationPersonnesAvecEcoles(Session bdd){
 
         for(Personne p : listeEtudiants){
             if (p.getMail().contains("@heg.ch")){
-                bdd.run("MATCH (etu:ETUDIANT), (hes:HES) WHERE etu.mail ='"+p.getMail()+"' AND hes.nom='HEG' CREATE (etu) -[:ETUDIE]-> (hes)");
+                bdd.run("MATCH (etu:PERSONNE), (hes:HES) WHERE etu.mail ='"+p.getMail()+"' AND hes.nom='HEG' CREATE (etu) -[:ETUDIE]-> (hes)");
             } else if (p.getMail().contains("@head.ch")) {
-                bdd.run("MATCH (etu:ETUDIANT), (hes:HES) WHERE etu.mail ='"+p.getMail()+"' AND hes.nom='HEAD' CREATE (etu) -[:ETUDIE]-> (hes)");
+                bdd.run("MATCH (etu:PERSONNE), (hes:HES) WHERE etu.mail ='"+p.getMail()+"' AND hes.nom='HEAD' CREATE (etu) -[:ETUDIE]-> (hes)");
             } else if (p.getMail().contains("@heds.ch")) {
-                bdd.run("MATCH (etu:ETUDIANT), (hes:HES) WHERE etu.mail ='"+p.getMail()+"' AND hes.nom='HEDS' CREATE (etu) -[:ETUDIE]-> (hes)");
+                bdd.run("MATCH (etu:PERSONNE), (hes:HES) WHERE etu.mail ='"+p.getMail()+"' AND hes.nom='HEDS' CREATE (etu) -[:ETUDIE]-> (hes)");
             } else if (p.getMail().contains("@hets.ch")) {
-                bdd.run("MATCH (etu:ETUDIANT), (hes:HES) WHERE etu.mail ='"+p.getMail()+"' AND hes.nom='HETS' CREATE (etu) -[:ETUDIE]-> (hes)");
+                bdd.run("MATCH (etu:PERSONNE), (hes:HES) WHERE etu.mail ='"+p.getMail()+"' AND hes.nom='HETS' CREATE (etu) -[:ETUDIE]-> (hes)");
             }
         }
 
@@ -145,16 +139,16 @@ public class Bdd {      // connection à la bdd
         }
 
         for(Personne p : listProfesseursHEG){
-            bdd.run("MATCH (prof:PROFESSEUR), (hes:HES) WHERE prof.mail='"+p.getMail()+"' AND hes.nom='HEG' CREATE (prof) -[:TRAVAILLE]-> (hes)");
+            bdd.run("MATCH (prof:PERSONNE), (hes:HES) WHERE prof.mail='"+p.getMail()+"' AND hes.nom='HEG' CREATE (prof) -[:TRAVAILLE]-> (hes)");
         }
         for(Personne p : listProfesseursHEAD){
-            bdd.run("MATCH (prof:PROFESSEUR), (hes:HES) WHERE prof.mail='"+p.getMail()+"' AND hes.nom='HEAD' CREATE (prof) -[:TRAVAILLE]-> (hes)");
+            bdd.run("MATCH (prof:PERSONNE), (hes:HES) WHERE prof.mail='"+p.getMail()+"' AND hes.nom='HEAD' CREATE (prof) -[:TRAVAILLE]-> (hes)");
         }
         for(Personne p : listProfesseursHEDS){
-            bdd.run("MATCH (prof:PROFESSEUR), (hes:HES) WHERE prof.mail='"+p.getMail()+"' AND hes.nom='HEDS' CREATE (prof) -[:TRAVAILLE]-> (hes)");
+            bdd.run("MATCH (prof:PERSONNE), (hes:HES) WHERE prof.mail='"+p.getMail()+"' AND hes.nom='HEDS' CREATE (prof) -[:TRAVAILLE]-> (hes)");
         }
         for(Personne p : listProfesseursHETS){
-            bdd.run("MATCH (prof:PROFESSEUR), (hes:HES) WHERE prof.mail='"+p.getMail()+"' AND hes.nom='HETS' CREATE (prof) -[:TRAVAILLE]-> (hes)");
+            bdd.run("MATCH (prof:PERSONNE), (hes:HES) WHERE prof.mail='"+p.getMail()+"' AND hes.nom='HETS' CREATE (prof) -[:TRAVAILLE]-> (hes)");
         }
 
 
@@ -181,16 +175,16 @@ public class Bdd {      // connection à la bdd
         }
 
         for(Personne p : listAssistantsHEG){
-            bdd.run("MATCH (assis:ASSISTANT), (hes:HES) WHERE assis.mail='"+p.getMail()+"' AND hes.nom='HEG' CREATE (assis) -[:TRAVAILLE]-> (hes)");
+            bdd.run("MATCH (assis:PERSONNE), (hes:HES) WHERE assis.mail='"+p.getMail()+"' AND hes.nom='HEG' CREATE (assis) -[:TRAVAILLE]-> (hes)");
         }
         for(Personne p : listAssistantsHEAD){
-            bdd.run("MATCH (assis:ASSISTANT), (hes:HES) WHERE assis.mail='"+p.getMail()+"' AND hes.nom='HEAD' CREATE (assis) -[:TRAVAILLE]-> (hes)");
+            bdd.run("MATCH (assis:PERSONNE), (hes:HES) WHERE assis.mail='"+p.getMail()+"' AND hes.nom='HEAD' CREATE (assis) -[:TRAVAILLE]-> (hes)");
         }
         for(Personne p : listAssistantsHEDS){
-            bdd.run("MATCH (assis:ASSISTANT), (hes:HES) WHERE assis.mail='"+p.getMail()+"' AND hes.nom='HEDS' CREATE (assis) -[:TRAVAILLE]-> (hes)");
+            bdd.run("MATCH (assis:PERSONNE), (hes:HES) WHERE assis.mail='"+p.getMail()+"' AND hes.nom='HEDS' CREATE (assis) -[:TRAVAILLE]-> (hes)");
         }
         for(Personne p : listAssistantsHETS){
-            bdd.run("MATCH (assis:ASSISTANT), (hes:HES) WHERE assis.mail='"+p.getMail()+"' AND hes.nom='HETS' CREATE (assis) -[:TRAVAILLE]-> (hes)");
+            bdd.run("MATCH (assis:PERSONNE), (hes:HES) WHERE assis.mail='"+p.getMail()+"' AND hes.nom='HETS' CREATE (assis) -[:TRAVAILLE]-> (hes)");
         }
 
 
@@ -202,9 +196,6 @@ public class Bdd {      // connection à la bdd
         allListe.addAll(listeEtudiants);
         allListe.addAll(listeAssistants);
         allListe.addAll(listeProfesseurs);
-
-        /**Est ce qu'on shuffle ?*/
-        //Collections.shuffle(allListe);
 
         return allListe;
     }
@@ -230,9 +221,8 @@ public class Bdd {      // connection à la bdd
 
             List<Personne> listeAleatoire = getRandomListeDePersonnes(generator.nextInt(15), generator); //je veux une liste avec un max de 15 personnes
             for(Personne personnesAleatoire : listeAleatoire){
-                bdd.run("MATCH (p1:Personne), (p2:Personne) WHERE p1.mail='"+personneCouranteDeLaListe.getMail()+"' AND p2.mail='"+personnesAleatoire.getMail()+"' CREATE (p1) -[:CONNAIT]-> (p2)");
-                bdd.run("MATCH (p1:Personne), (p2:Personne) WHERE p1.mail='"+personneCouranteDeLaListe.getMail()+"' AND p2.mail='"+personnesAleatoire.getMail()+"' CREATE (p1) <-[:CONNAIT]- (p2)");
-
+                bdd.run("MATCH (p1:PERSONNE), (p2:PERSONNE) WHERE p1.mail='"+personneCouranteDeLaListe.getMail()+"' AND p2.mail='"+personnesAleatoire.getMail()+"' CREATE (p1) -[:CONNAIT]-> (p2)");
+                bdd.run("MATCH (p1:PERSONNE), (p2:PERSONNE) WHERE p1.mail='"+personneCouranteDeLaListe.getMail()+"' AND p2.mail='"+personnesAleatoire.getMail()+"' CREATE (p1) <-[:CONNAIT]- (p2)");
             }
 
         }
