@@ -1,6 +1,7 @@
 package dao;
 
 import domaine.Evenement;
+import domaine.Filiere;
 
 
 import java.io.BufferedReader;
@@ -13,6 +14,7 @@ public class Data {
 
     private static final String FILENAME_Personne = "PERSONNES.csv";
     private static final String FILENAME_Evenement= "EVENEMENTS.csv";
+    private static final String FILENAME_Filiere= "FILIERES_HES.csv";
     public static List<String[]> listePersonnes() {
         try {
             BufferedReader reader  = new BufferedReader(new FileReader(FILENAME_Personne));
@@ -48,6 +50,21 @@ public class Data {
             return lstEvenement;
         } catch (IOException e) {  e.printStackTrace(); return null; }
     }
+
+    public static List<String[]> listeFiliere() {
+        try {
+            BufferedReader reader  = new BufferedReader(new FileReader(FILENAME_Filiere));
+            List<String[]> lstFiliere= new ArrayList<>();
+            String ligne;
+            while ((ligne = reader.readLine()) != null) {
+                String[] data = ligne.split(";");
+                lstFiliere.add(data);
+            }
+            reader.close();
+            return lstFiliere;
+        } catch (IOException e) {  e.printStackTrace(); return null; }
+    }
+
 
 
 

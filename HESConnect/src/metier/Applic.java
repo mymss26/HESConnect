@@ -7,11 +7,8 @@ public class Applic {
   public Applic(){
      Session bdd = Bdd.connect_db();
      Bdd.setup_env(bdd);
-     Bdd.chargerDataPersonne(bdd);
-     Bdd.chargerDataEvenement(bdd);
-     Bdd.chargerDataHES(bdd);
-     Bdd.relationPersonnesAvecEcoles(bdd);
-     Bdd.relationPersonnesAvecAutresPersonnes(bdd);
+     GestionRelationsPersonnes.creerRelations(bdd);
+     GestionRelationsFilieres.loadRelationFiliere(bdd);
       System.out.println("Process executed");
   }
 
