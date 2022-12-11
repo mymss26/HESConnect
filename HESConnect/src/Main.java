@@ -7,21 +7,23 @@ import domaine.Prof;
 import metier.Applic;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 public class Main {
     public static void main(String[] args) {
         new Applic();
 
 
-
+/**
         for(Personne p : Bdd.getListeEtudiant()){
             if(p.getMail().contains("@heg.ch")) {
                 System.out.println(p);
             }
         }
 
-/**
+
         for(HES e : Bdd.getListeEcoles()){
             //System.out.println(e);
         }
@@ -89,6 +91,29 @@ public class Main {
         //System.out.println(listAssistantssHETS.size());
 
     */
+
+/**
+        List<Personne> allListe = new ArrayList<>();
+        allListe.addAll(Bdd.getListeAssistant());
+        allListe.addAll(Bdd.getListeProfesseurs());
+        allListe.addAll(Bdd.getListeEtudiant());
+
+       Collections.shuffle(allListe);
+
+
+
+        for(Personne p : allListe){
+            System.out.println(p);
+        }
+
+ */
+    Random generator = new Random();
+    List<Personne> listeTest = Bdd.getRandomListeDePersonnes(generator.nextInt(15), generator);
+
+    for(Personne p : listeTest){
+        System.out.println(p);
+    }
+
 
     }
 }

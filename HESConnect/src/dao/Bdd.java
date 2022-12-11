@@ -5,6 +5,7 @@ import metier.FabriquePersonne;
 import metier.FabriquePersonnes;
 import org.neo4j.driver.GraphDatabase;
 import org.neo4j.driver.Session;
+import org.neo4j.driver.Value;
 
 import java.util.*;
 
@@ -74,9 +75,6 @@ public class Bdd {      // connection à la bdd
         }
     }
 
-    /***
-     * Je fais ca commme ca, mais apres on peut le faire un avec csv comme les autres
-     * */
     public static List<HES> getListeEcoles(){
         List<HES> listEcoles = new ArrayList<>();
         List nomEcoles = List.of("HEAD", "HEDS", "HEG", "HETS");
@@ -122,11 +120,6 @@ public class Bdd {      // connection à la bdd
             }
         }
 
-        /**Concatener les 2 listes => car les ont la relation :TRAVAILLE
-        List<Personne> listeProfesseurEtAssistant = new ArrayList<>();
-        listeProfesseurEtAssistant.addAll(listeProfesseurs);
-        listeProfesseurEtAssistant.addAll(listeAssistants);
-        */
 
         List<Personne> listProfesseursHEG = new ArrayList<>();  //15 profs
         List<Personne> listProfesseursHEAD = new ArrayList<>(); //15 profs
@@ -202,13 +195,52 @@ public class Bdd {      // connection à la bdd
 
 
 
+    }
 
+    public static List<Personne> concatenerToutesLesListes(){
+        List<Personne> allListe = new ArrayList<>();
+        allListe.addAll(listeEtudiants);
+        allListe.addAll(listeAssistants);
+        allListe.addAll(listeProfesseurs);
 
+        /**Est ce qu'on shuffle ?*/
+        //Collections.shuffle(allListe);
 
+        return allListe;
+    }
 
+    public static List<Personne> getRandomListeDePersonnes(int nbPersonnes, Random generator){
+
+        List<Personne> allListe = concatenerToutesLesListes();
+        List<Personne> listeAleatoire = new ArrayList<>();
+        for(int i = 0 ; i<nbPersonnes; i++){
+            int nb = generator.nextInt(allListe.size());
+            listeAleatoire.add(allListe.get(nb));
+            allListe.remove(nb);
+        }
+        return listeAleatoire;
+    }
+
+    public static void relationPersonnesAvecAutresPersonnes(Session bdd){
+
+        Random generator = new Random();
+
+        for(int i = 0; i< concatenerToutesLesListes().size(); i++){
+            Personne personneCouranteDeLaListe = concatenerToutesLesListes().get(i);
+
+            List<Personne> listeAleatoire = getRandomListeDePersonnes(generator.nextInt(15), generator); //je veux une liste avec un max de 15 personnes
+            for(Personne personnesAleatoire : listeAleatoire){
+                bdd.run("MATCH (p1:Personne), (p2:Personne) WHERE p1.mail='"+personneCouranteDeLaListe.getMail()+"' AND p2.mail='"+personnesAleatoire.getMail()+"' CREATE (p1) -[:CONNAIT]-> (p2)");
+                bdd.run("MATCH (p1:Personne), (p2:Personne) WHERE p1.mail='"+personneCouranteDeLaListe.getMail()+"' AND p2.mail='"+personnesAleatoire.getMail()+"' CREATE (p1) <-[:CONNAIT]- (p2)");
+
+            }
+
+        }
 
 
     }
+
+
 
 
 
