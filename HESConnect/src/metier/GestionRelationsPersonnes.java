@@ -6,10 +6,7 @@ import domaine.Filiere;
 import domaine.Personne;
 import org.neo4j.driver.Session;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class GestionRelationsPersonnes {
@@ -17,8 +14,9 @@ public class GestionRelationsPersonnes {
     public static void creerRelations(Session bdd){
         relationAssistantTravailHes(bdd);
         relationPersonneQuiEtudieHes(bdd);
-        relationProfTravailHes(bdd);
+       // relationProfTravailHes(bdd);
         relationPersonnesAvecAutresPersonnes(bdd);
+        relationPersonneQuiEnseigneHes(bdd);
     }
 
     public static void relationPersonneQuiEtudieHes(Session bdd) {
@@ -37,11 +35,28 @@ public class GestionRelationsPersonnes {
         }
     }
 
+    public static void relationPersonneQuiEnseigneHes(Session bdd) {
+        List<String[]> listFiliere = Data.listeFiliere();
+        List<String> lstNomFiliere = new ArrayList<>();
+        assert listFiliere != null;
+        for (String[] lstFi : listFiliere) {
+            lstNomFiliere.add(lstFi[1]);
+        }
+        for (Personne p : Bdd.getListeProfesseurs()) { // parcours les personnes
+            Random randomFiliere = new Random();
+            bdd.run("MATCH (prof:PERSONNE), (fi:FILIERE) WHERE prof.mail ='" + p.getMail() + "' AND fi.nom='"+ lstNomFiliere.get(randomFiliere.nextInt(lstNomFiliere.size())) +"' CREATE (prof) -[:ENSEIGNE]-> (fi)");
+        }
+    }
+
+
+
+
     public static String determineHES(String mail){
         if(mail.contains("@heg.ch")){return "HEG"; }
         else if(mail.contains("@head.ch")){return "HEAD"; }
         else if(mail.contains("@heds.ch")){return "HEDS"; }
         else if(mail.contains("@hets.ch")){return "HETS"; }
+        else if(mail.contains("@hes.ch")){return "HES"; }
         return null;
     }
 

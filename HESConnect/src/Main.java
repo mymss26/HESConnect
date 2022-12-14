@@ -11,15 +11,6 @@ import java.util.Random;
 
 public class Main {
     public static void main(String[] args) {
-        //new Applic();
-
-
-        for(Evenement f : Data.listeEvenement()){
-
-            System.out.println(f);
-        }
-
-
-
+        new Applic();
     }
 }
