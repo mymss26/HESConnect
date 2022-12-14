@@ -122,7 +122,7 @@ public class Bdd {
 
     private static void chargerDataFiliere(Session bdd) {
         for(Filiere data : getListeFiliere(bdd)){
-           bdd.run("CREATE(:Filiere{nom:'"+data.getNom()+"',Competences:'"+data.getCompetences()+"'})");
+           bdd.run("CREATE(:Filiere{nom:'"+data.getNom()+"',competences:'"+data.getCompetences()+"'})");
         }
 
     }
