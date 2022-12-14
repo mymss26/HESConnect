@@ -1,12 +1,16 @@
 package metier;
 
 import dao.Bdd;
+import dao.Data;
+import domaine.Filiere;
 import domaine.Personne;
 import org.neo4j.driver.Session;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class GestionRelationsPersonnes {
 
@@ -18,19 +22,29 @@ public class GestionRelationsPersonnes {
     }
 
     public static void relationPersonneQuiEtudieHes(Session bdd) {
-        for (Personne p : Bdd.getListeEtudiant()) {
-            if (p.getMail().contains("@heg.ch")) {
-                bdd.run("MATCH (etu:PERSONNE), (hes:HES) WHERE etu.mail ='" + p.getMail() + "' AND hes.nom='HEG' CREATE (etu) -[:ETUDIE]-> (hes)");
-            } else if (p.getMail().contains("@head.ch")) {
-                bdd.run("MATCH (etu:PERSONNE), (hes:HES) WHERE etu.mail ='" + p.getMail() + "' AND hes.nom='HEAD' CREATE (etu) -[:ETUDIE]-> (hes)");
-            } else if (p.getMail().contains("@heds.ch")) {
-                bdd.run("MATCH (etu:PERSONNE), (hes:HES) WHERE etu.mail ='" + p.getMail() + "' AND hes.nom='HEDS' CREATE (etu) -[:ETUDIE]-> (hes)");
-            } else if (p.getMail().contains("@hets.ch")) {
-                bdd.run("MATCH (etu:PERSONNE), (hes:HES) WHERE etu.mail ='" + p.getMail() + "' AND hes.nom='HETS' CREATE (etu) -[:ETUDIE]-> (hes)");
+        List<String[]> listFiliere = Data.listeFiliere();
+        for (Personne p : Bdd.getListeEtudiant()) { // parcours les personnes
+            List<String> l = new ArrayList<>(); // on créé une liste qui recuperera le nom des filiere correspodant à HEx
+            assert listFiliere != null;
+            for (String[] f:listFiliere){ // on parcours la liste des filiere entiere
+                String nomEcole = f[0];
+                if(nomEcole.equals(determineHES(p.getMail()))){ // si f[0] correspoect
+                    l.add(f[1]); // on ajoute le nom de la filiere à notre liste
+                }
             }
+            Random randomFiliere = new Random();
+                bdd.run("MATCH (etu:PERSONNE), (fi:FILIERE) WHERE etu.mail ='" + p.getMail() + "' AND fi.nom='"+l.get(randomFiliere.nextInt(l.size()))+"' CREATE (etu) -[:ETUDIE]-> (fi)");
         }
-
     }
+
+    public static String determineHES(String mail){
+        if(mail.contains("@heg.ch")){return "HEG"; }
+        else if(mail.contains("@head.ch")){return "HEAD"; }
+        else if(mail.contains("@heds.ch")){return "HEDS"; }
+        else if(mail.contains("@hets.ch")){return "HETS"; }
+        return null;
+    }
+
 
     public static void relationProfTravailHes(Session bdd) {
         List<Personne> listProfesseursHEG = new ArrayList<>(); // 9 profs
@@ -122,7 +136,6 @@ public class GestionRelationsPersonnes {
         Random generator = new Random();
         for (int i = 0; i < concatenerToutesLesListes().size(); i++) {
             Personne personneCouranteDeLaListe = concatenerToutesLesListes().get(i);
-
             List<Personne> listeAleatoire = getRandomListeDePersonnes(generator.nextInt(15), generator); //je veux une liste avec un max de 15 personnes
             for (Personne personnesAleatoire : listeAleatoire) {
                 bdd.run("MATCH (p1:PERSONNE), (p2:PERSONNE) WHERE p1.mail='" + personneCouranteDeLaListe.getMail() + "' AND p2.mail='" + personnesAleatoire.getMail() + "' CREATE (p1) -[:CONNAIT]-> (p2)");

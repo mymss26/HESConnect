@@ -62,15 +62,12 @@ public class Bdd {
         return listeAssistants;
     }
 
-
     public static void chargerDataEvenement(Session bdd){
         List<Evenement> evenement = Data.listeEvenement();
         for(Evenement data : evenement){
             bdd.run("CREATE(:EVENEMENT{titre:'"+data.getNomEvenement()+"',thematique:'"+data.getThematique()+"'})");
         }
     }
-
-
 
     public static List<HES> getListeEcoles(){
         List<HES> listEcoles = new ArrayList<>();
@@ -113,8 +110,6 @@ public class Bdd {
         }
         return lstFiliere;
         }
-
-
 
     private static void chargerDataFiliere(Session bdd) {
         for(Filiere data : getListeFiliere(bdd)){
