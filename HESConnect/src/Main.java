@@ -1,10 +1,8 @@
 import dao.Bdd;
 import dao.Data;
-import domaine.HEG;
-import domaine.HES;
-import domaine.Personne;
-import domaine.Prof;
+import domaine.*;
 import metier.Applic;
+import org.neo4j.driver.Session;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,6 +12,7 @@ import java.util.Random;
 public class Main {
     public static void main(String[] args) {
         new Applic();
+
 
 
     }

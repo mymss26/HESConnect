@@ -5,9 +5,7 @@ import metier.FabriquePersonne;
 import metier.FabriquePersonnes;
 import org.neo4j.driver.GraphDatabase;
 import org.neo4j.driver.Session;
-import org.neo4j.driver.Value;
 
-import javax.swing.*;
 import java.util.*;
 
 public class Bdd {
@@ -72,11 +70,7 @@ public class Bdd {
         }
     }
 
-   public static void chargerDataHES(Session bdd){
-        for (HES e : getListeEcoles()){
-            bdd.run("CREATE(:HES{nom:'"+e.getNom()+"', adresse:'"+e.getAdresse()+"'})");
-        }
-    }
+
 
     public static List<HES> getListeEcoles(){
         List<HES> listEcoles = new ArrayList<>();
@@ -120,14 +114,21 @@ public class Bdd {
         return lstFiliere;
         }
 
+
+
     private static void chargerDataFiliere(Session bdd) {
         for(Filiere data : getListeFiliere(bdd)){
-           bdd.run("CREATE(:Filiere{nom:'"+data.getNom()+"',competences:'"+data.getCompetences()+"'})");
+           bdd.run("CREATE(:FILIERE{nom:'"+data.getNom()+"',competences:'"+data.getCompetences()+"'})");
         }
-
     }
 
 
+
+    public static void chargerDataHES(Session bdd){
+        for (HES e : getListeEcoles()){
+            bdd.run("CREATE(:HES{nom:'"+e.getNom()+"', adresse:'"+e.getAdresse()+"'})");
+        }
+    }
 
     }
 
