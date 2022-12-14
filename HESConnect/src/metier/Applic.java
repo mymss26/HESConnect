@@ -9,7 +9,7 @@ public class Applic {
      Bdd.setup_env(bdd);
      GestionRelationsPersonnes.creerRelations(bdd);
      GestionRelationsFilieres.loadRelationFiliere(bdd);
-      System.out.println("Process executed");
+     System.out.println("Process executed");
   }
 
 }
