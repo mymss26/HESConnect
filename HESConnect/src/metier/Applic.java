@@ -10,6 +10,9 @@ public class Applic {
      Bdd.setup_env(bdd);
      GestionRelationsPersonnes.creerRelations(bdd);
      GestionRelationsFilieres.loadRelationFiliere(bdd);
+
+     GestionRelationsEvenements.relationHESetEvenement(bdd);
+
      System.out.println("Process executed");
 
 

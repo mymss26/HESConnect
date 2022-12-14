@@ -65,7 +65,7 @@ public class Bdd {
     public static void chargerDataEvenement(Session bdd){
         List<Evenement> evenement = Data.listeEvenement();
         for(Evenement data : evenement){
-            bdd.run("CREATE(:EVENEMENT{titre:'"+data.getNomEvenement()+"',thematique:'"+data.getThematique()+"'})");
+            bdd.run("CREATE(:EVENEMENT{nom:'"+data.getNomEvenement()+"',thematique:'"+data.getThematique()+"'})");
         }
     }
 
