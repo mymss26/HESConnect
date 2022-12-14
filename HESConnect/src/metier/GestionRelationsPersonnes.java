@@ -12,9 +12,8 @@ import java.util.concurrent.ThreadLocalRandom;
 public class GestionRelationsPersonnes {
 
     public static void creerRelations(Session bdd){
-        relationAssistantTravailHes(bdd);
+        relationAssistantPourFiliere(bdd);
         relationPersonneQuiEtudieHes(bdd);
-       // relationProfTravailHes(bdd);
         relationPersonnesAvecAutresPersonnes(bdd);
         relationPersonneQuiEnseigneHes(bdd);
     }
@@ -44,10 +43,22 @@ public class GestionRelationsPersonnes {
         }
         for (Personne p : Bdd.getListeProfesseurs()) { // parcours les personnes
             Random randomFiliere = new Random();
-            bdd.run("MATCH (prof:PERSONNE), (fi:FILIERE) WHERE prof.mail ='" + p.getMail() + "' AND fi.nom='"+ lstNomFiliere.get(randomFiliere.nextInt(lstNomFiliere.size())) +"' CREATE (prof) -[:ENSEIGNE]-> (fi)");
+            bdd.run("MATCH (prof:PERSONNE), (fi:FILIERE) WHERE prof.mail ='" + p.getMail() + "' AND fi.nom='"+ lstNomFiliere.get(randomFiliere.nextInt(lstNomFiliere.size())) +"' CREATE (prof) -[:ENSEIGNE_POUR]-> (fi)");
         }
     }
 
+    public static void relationAssistantPourFiliere(Session bdd) {
+        List<String[]> listFiliere = Data.listeFiliere();
+        List<String> lstNomFiliere = new ArrayList<>();
+        assert listFiliere != null;
+        for (String[] lstFi : listFiliere) {
+            lstNomFiliere.add(lstFi[1]);
+        }
+        for (Personne p : Bdd.getListeAssistant()) { // parcours les personnes
+            Random randomFiliere = new Random();
+            bdd.run("MATCH (ass:PERSONNE), (fi:FILIERE) WHERE ass.mail ='" + p.getMail() + "' AND fi.nom='"+ lstNomFiliere.get(randomFiliere.nextInt(lstNomFiliere.size())) +"' CREATE (ass) -[:ASSISTE_POUR]-> (fi)");
+        }
+    }
 
 
 
@@ -66,7 +77,6 @@ public class GestionRelationsPersonnes {
         List<Personne> listProfesseursHEAD = new ArrayList<>(); // 9 profs
         List<Personne> listProfesseursHEDS = new ArrayList<>(); // 6 profs
         List<Personne> listProfesseursHETS = new ArrayList<>(); // 4 profs
-
 
         int compteurProf = 0;
         for (Personne p : Bdd.getListeProfesseurs()){
