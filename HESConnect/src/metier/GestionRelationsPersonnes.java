@@ -33,24 +33,24 @@ public class GestionRelationsPersonnes {
     }
 
     public static void relationProfTravailHes(Session bdd) {
-        List<Personne> listProfesseursHEG = new ArrayList<>();  //15 profs
-        List<Personne> listProfesseursHEAD = new ArrayList<>(); //15 profs
-        List<Personne> listProfesseursHEDS = new ArrayList<>(); //10 profs
-        List<Personne> listProfesseursHETS = new ArrayList<>(); //5 profs
+        List<Personne> listProfesseursHEG = new ArrayList<>(); // 9 profs
+        List<Personne> listProfesseursHEAD = new ArrayList<>(); // 9 profs
+        List<Personne> listProfesseursHEDS = new ArrayList<>(); // 6 profs
+        List<Personne> listProfesseursHETS = new ArrayList<>(); // 4 profs
 
 
         int compteurProf = 0;
         for (Personne p : Bdd.getListeProfesseurs()){
-            if((listProfesseursHEG.isEmpty() || listProfesseursHEG.size() <= 15) && compteurProf<=14){
+            if((listProfesseursHEG.isEmpty() || listProfesseursHEG.size() <= 9)){
                 listProfesseursHEG.add(p);
                 compteurProf++;
-            } else if ((listProfesseursHEAD.isEmpty() || listProfesseursHEAD.size() <= 15) && (compteurProf >= 15 && compteurProf <= 29)){
+            } else if ((listProfesseursHEAD.isEmpty() || listProfesseursHEAD.size() <= 9)){
                 listProfesseursHEAD.add(p);
                 compteurProf++;
-            }else if ((listProfesseursHEDS.isEmpty() || listProfesseursHEDS.size() <= 10) && (compteurProf >= 30 && compteurProf <= 39)) {
+            }else if ((listProfesseursHEDS.isEmpty() || listProfesseursHEDS.size() <= 6)) {
                 listProfesseursHEDS.add(p);
                 compteurProf++;
-            } else if ((listProfesseursHETS.isEmpty() || listProfesseursHETS.size() <= 5) && (compteurProf >= 40 && compteurProf <= 45)){
+            } else if ((listProfesseursHETS.isEmpty() || listProfesseursHETS.size() <= 4)){
                 listProfesseursHETS.add(p);
                 compteurProf++;
             }
@@ -62,23 +62,23 @@ public class GestionRelationsPersonnes {
      * */
     public static void relationAssistantTravailHes(Session bdd) {
 
-        List<Personne> listAssistantsHEG = new ArrayList<>();  //7 assistants pour 15 profs
-        List<Personne> listAssistantsHEAD = new ArrayList<>(); //7 assistants pour 15 profs
-        List<Personne> listAssistantsHEDS = new ArrayList<>(); //5 assistants pour 10 profs
-        List<Personne> listAssistantsHETS = new ArrayList<>(); //3 assistants pour 5 profs
+        List<Personne> listAssistantsHEG = new ArrayList<>(); //4 assistants
+        List<Personne> listAssistantsHEAD = new ArrayList<>(); //3 assistants
+        List<Personne> listAssistantsHEDS = new ArrayList<>(); //2 assistants
+        List<Personne> listAssistantsHETS = new ArrayList<>(); //1 assistants
 
         int compteurAssistant = 0;
         for (Personne p : Bdd.getListeAssistant()) {
-            if ((listAssistantsHEG.isEmpty() || listAssistantsHEG.size() <= 7) && compteurAssistant <= 6) {
+            if ((listAssistantsHEG.isEmpty() || listAssistantsHEG.size() <= 4)){
                 listAssistantsHEG.add(p);
                 compteurAssistant++;
-            } else if ((listAssistantsHEAD.isEmpty() || listAssistantsHEAD.size() <= 7) && (compteurAssistant >= 7 && compteurAssistant <= 13)) {
+            } else if ((listAssistantsHEAD.isEmpty() || listAssistantsHEAD.size() <= 3)){
                 listAssistantsHEAD.add(p);
                 compteurAssistant++;
-            } else if ((listAssistantsHEDS.isEmpty() || listAssistantsHEDS.size() <= 5) && (compteurAssistant >= 14 && compteurAssistant <= 18)) {
+            } else if ((listAssistantsHEDS.isEmpty() || listAssistantsHEDS.size() <= 2)){
                 listAssistantsHEDS.add(p);
                 compteurAssistant++;
-            } else if ((listAssistantsHETS.isEmpty() || listAssistantsHETS.size() <= 3) && (compteurAssistant >= 19 && compteurAssistant <= 22)) {
+            } else if ((listAssistantsHETS.isEmpty() || listAssistantsHETS.size() <= 1)){
                 listAssistantsHETS.add(p);
                 compteurAssistant++;
             }
