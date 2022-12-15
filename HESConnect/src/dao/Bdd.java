@@ -125,5 +125,44 @@ public class Bdd {
         }
     }
 
+
+
+
+    //Query 1
+    public static void cheminLePlusCourt(Session bdd){
+        /**
+        Random rand = new Random();
+        for(Personne p: listeEtudiants){
+            if(p.getMail().contains("@heds.ch")){
+                Personne randonElement = listeEtudiants.get(rand.nextInt(listeEtudiants.size()));
+            }
+        }
+        */
+
+        String email = "lgabalaa4@heds.ch";
+        String rqte = "MATCH (etuHeds:PERSONNE{mail:'lgabalaa4@heds.ch'}), (heg:HES{nom:'HEG'}), (fi:FILIERE{nom:'Informatique de Gestion'})" +
+                      "";
+        /*
+
+        MATCH (etuHeds:PERSONNE {mail:"lgabalaa4@heds.ch"}), (HEG:HES {nom: "HEG"}),(Fi:FILIERE{nom:"Informatique de Gestion"})
+
+MATCH (etuHeds)-[:ETUDIE]->(r)
+
+MATCH a=shortestPath((Fi)-[APPARTIENT*]-(HEG))
+
+MATCH p=shortestPath((etuHeds)-[ETUDIE*]-(Fi))
+
+RETURN p,a,r
+
+         */
+
+
+
+
     }
+
+
+
+
+}
 

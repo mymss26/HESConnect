@@ -168,8 +168,6 @@ public class GestionRelationsPersonnes {
                     bdd.run("MATCH (p1:PERSONNE), (p2:PERSONNE) WHERE p1.mail='" + personneCouranteDeLaListe.getMail() + "' AND p2.mail='" + personnesAleatoire.getMail() + "' CREATE (p1) <-[:CONNAIT]- (p2)");
                 }
             }
-
         }
-
     }
 }

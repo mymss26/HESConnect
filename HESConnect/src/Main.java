@@ -14,6 +14,18 @@ public class Main {
         new Applic();
 
 
+        Random rand = new Random();
+
+        for(Personne p: Bdd.getListeEtudiant()){
+            if(p.getMail().contains("@heds.ch")){
+                System.out.println(p);
+                Personne randonElement = Bdd.getListeEtudiant().get(rand.nextInt(Bdd.getListeEtudiant().size()));
+                System.out.println(randonElement);
+            }
+        }
+
+
+
 
     }
 }
