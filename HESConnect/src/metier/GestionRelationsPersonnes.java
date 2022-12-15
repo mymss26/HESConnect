@@ -163,8 +163,10 @@ public class GestionRelationsPersonnes {
             Personne personneCouranteDeLaListe = concatenerToutesLesListes().get(i);
             List<Personne> listeAleatoire = getRandomListeDePersonnes(generator.nextInt(15), generator); //je veux une liste avec un max de 15 personnes
             for (Personne personnesAleatoire : listeAleatoire) {
-                bdd.run("MATCH (p1:PERSONNE), (p2:PERSONNE) WHERE p1.mail='" + personneCouranteDeLaListe.getMail() + "' AND p2.mail='" + personnesAleatoire.getMail() + "' CREATE (p1) -[:CONNAIT]-> (p2)");
-                bdd.run("MATCH (p1:PERSONNE), (p2:PERSONNE) WHERE p1.mail='" + personneCouranteDeLaListe.getMail() + "' AND p2.mail='" + personnesAleatoire.getMail() + "' CREATE (p1) <-[:CONNAIT]- (p2)");
+                if(personnesAleatoire.getMail()!= personneCouranteDeLaListe.getMail()) {
+                    bdd.run("MATCH (p1:PERSONNE), (p2:PERSONNE) WHERE p1.mail='" + personneCouranteDeLaListe.getMail() + "' AND p2.mail='" + personnesAleatoire.getMail() + "' CREATE (p1) -[:CONNAIT]-> (p2)");
+                    bdd.run("MATCH (p1:PERSONNE), (p2:PERSONNE) WHERE p1.mail='" + personneCouranteDeLaListe.getMail() + "' AND p2.mail='" + personnesAleatoire.getMail() + "' CREATE (p1) <-[:CONNAIT]- (p2)");
+                }
             }
 
         }
