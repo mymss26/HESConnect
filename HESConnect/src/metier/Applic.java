@@ -15,6 +15,9 @@ public class Applic {
 
      System.out.println("Process executed");
 
+      System.out.println("Les requêtes : ");
+      Bdd.cheminLePlusCourt(bdd);
+
 
   }
 

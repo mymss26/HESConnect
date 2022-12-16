@@ -4,6 +4,7 @@ import domaine.*;
 import metier.FabriquePersonne;
 import metier.FabriquePersonnes;
 import org.neo4j.driver.GraphDatabase;
+import org.neo4j.driver.Result;
 import org.neo4j.driver.Session;
 
 import java.util.*;
@@ -138,24 +139,24 @@ public class Bdd {
             }
         }
         */
-
+        System.out.println("Test print rqtes - START METHOD");
         String email = "lgabalaa4@heds.ch";
-        String rqte = "MATCH (etuHeds:PERSONNE{mail:'lgabalaa4@heds.ch'}), (heg:HES{nom:'HEG'}), (fi:FILIERE{nom:'Informatique de Gestion'})" +
-                      "";
-        /*
+        String rqte = "MATCH (etuHeds:PERSONNE{mail:'lgabalaa4@heds.ch'}), (heg:HES{nom:'HEG'}), (fi:FILIERE{nom:'Informatique de Gestion'}) " +
+                      "MATCH (etuHeds) -[:ETUDIE]-> (r) " +
+                      "MATCH a=shortestPath((fi)-[APPARTIENT*]-(heg)) " +
+                      "MATCH p=shortestPath((etuHeds)-[ETUDIE*]-(fi)) "+
+                      "RETURN p,a,r";
 
-        MATCH (etuHeds:PERSONNE {mail:"lgabalaa4@heds.ch"}), (HEG:HES {nom: "HEG"}),(Fi:FILIERE{nom:"Informatique de Gestion"})
+        Result result = bdd.run(rqte);
+        while(result.hasNext()){
+            /**on va recup le result => le transformer en java => et afficher le toString*/
+            System.out.println(result);
+            System.out.println(result.peek()); //=> ca m'affiche le record des 3 returns
+            System.out.println(result.peek().get("p"));
+            result.next();
+        }
 
-MATCH (etuHeds)-[:ETUDIE]->(r)
-
-MATCH a=shortestPath((Fi)-[APPARTIENT*]-(HEG))
-
-MATCH p=shortestPath((etuHeds)-[ETUDIE*]-(Fi))
-
-RETURN p,a,r
-
-         */
-
+        System.out.println("Test print rqtes - END METHOD");
 
 
 
