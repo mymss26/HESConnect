@@ -29,8 +29,12 @@ public class GestionRelationsPersonnes {
                     l.add(f[1]); // on ajoute le nom de la filiere à notre liste
                 }
             }
-            Random randomFiliere = new Random();
+            try {
+                Random randomFiliere = new Random();
                 bdd.run("MATCH (etu:PERSONNE), (fi:FILIERE) WHERE etu.mail ='" + p.getMail() + "' AND fi.nom='"+l.get(randomFiliere.nextInt(l.size()))+"' CREATE (etu) -[:ETUDIE]-> (fi)");
+            } catch (IllegalArgumentException e) {
+            }
+
         }
     }
 

@@ -112,7 +112,7 @@ public class Bdd {
         return lstFiliere;
         }
 
-    private static void chargerDataFiliere(Session bdd) {
+    private static void chargerDataFiliere(Session bdd) { // creation des noeud filiere et competence. Creation de la relation qui les lie
         for(Filiere data : getListeFiliere(bdd)){
            bdd.run("CREATE(:FILIERE{nom:'"+data.getNom()+"',competences:'"+data.getCompetences()+"'})");
            for(String competence : data.getCompetences()){
