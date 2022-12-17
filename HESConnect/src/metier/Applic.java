@@ -13,10 +13,9 @@ public class Applic {
 
      GestionRelationsEvenements.relationHESetEvenement(bdd);
 
-     System.out.println("Process executed");
+     System.out.println("Les requêtes : ");
 
-      System.out.println("Les requêtes : ");
-      Bdd.cheminLePlusCourt(bdd);
+
 
 
   }
