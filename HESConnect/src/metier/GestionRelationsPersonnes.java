@@ -20,18 +20,14 @@ public class GestionRelationsPersonnes {
 
     public static void relationPersonneQuiEtudieHes(Session bdd) {
         List<String[]> listFiliere = Data.listeFiliere();
-        List<String> l = new ArrayList<>();
         for (Personne p : Bdd.getListeEtudiant()) { // parcours les personnes
-           // on créé une liste qui recuperera le nom des filiere correspodant à HEx
+            List<String> l = new ArrayList<>(); // on créé une liste qui recuperera le nom des filiere correspodant à HEx
             assert listFiliere != null;
             for (String[] f:listFiliere){ // on parcours la liste des filiere entiere
                 String nomEcole = f[0];
                 if(nomEcole.equals(determineHES(p.getMail()))){ // si f[0] correspoect
                     l.add(f[1]); // on ajoute le nom de la filiere à notre liste
                 }
-            }
-            if (l.isEmpty()) {
-                System.out.println("liste (l) vide");
             }
             Random randomFiliere = new Random();
                 bdd.run("MATCH (etu:PERSONNE), (fi:FILIERE) WHERE etu.mail ='" + p.getMail() + "' AND fi.nom='"+l.get(randomFiliere.nextInt(l.size()))+"' CREATE (etu) -[:ETUDIE]-> (fi)");

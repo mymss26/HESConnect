@@ -6,7 +6,6 @@ import metier.FabriquePersonnes;
 import org.neo4j.driver.GraphDatabase;
 import org.neo4j.driver.Result;
 import org.neo4j.driver.Session;
-import org.neo4j.driver.Transaction;
 
 import java.util.*;
 
@@ -27,8 +26,9 @@ public class Bdd {
         chargerDataEvenement(bdd);
         chargerDataHES(bdd);
         chargerDataFiliere(bdd);
-        chargerDataCompetences(bdd);
     }
+
+
 
     public static void delete_all(Session bdd){
         bdd.run("match (a) -[r] -> () delete a, r");
@@ -100,17 +100,24 @@ public class Bdd {
 
         for(String[] data : filiere){
             ArrayList<String> lstCompetences = new ArrayList<>();
-            lstFiliere.add(new Filiere(data[1]));
+            if(data.length>2) {
+                for (int i = 1; i < data.length; i++) {
+                    lstCompetences.add(data[i]);
+                }
+            }
+            else{
+                lstCompetences.add(data[2]);}
+            lstFiliere.add(new Filiere(data[1],lstCompetences));
         }
         return lstFiliere;
         }
 
-
     private static void chargerDataFiliere(Session bdd) {
         for(Filiere data : getListeFiliere(bdd)){
-           bdd.run("CREATE(:FILIERE{nom:'"+data.getNom()+"'})");
+           bdd.run("CREATE(:FILIERE{nom:'"+data.getNom()+"',competences:'"+data.getCompetences()+"'})");
         }
     }
+
 
 
     public static void chargerDataHES(Session bdd){
@@ -119,18 +126,44 @@ public class Bdd {
         }
     }
 
-    private static void chargerDataCompetences(Session bdd) {
-        for (Competence data : Data.listeCompetences()) {
-            String nom = data.getNom();
-            if(nom.contains("'")){
-                nom = nom.replace("'"," ");
-            }
-            String query = "CREATE(n:COMPETENCE{nom:'"+nom+"'})";
-            bdd.run(query);
+
+
+
+    //Query 1
+    public static void cheminLePlusCourt(Session bdd){
+        /**
+        Random rand = new Random();
+        for(Personne p: listeEtudiants){
+            if(p.getMail().contains("@heds.ch")){
+                Personne randonElement = listeEtudiants.get(rand.nextInt(listeEtudiants.size()));
             }
         }
+        */
+        System.out.println("Test print rqtes - START METHOD");
+        String email = "lgabalaa4@heds.ch";
+        String rqte = "MATCH (etuHeds:PERSONNE{mail:'lgabalaa4@heds.ch'}), (heg:HES{nom:'HEG'}), (fi:FILIERE{nom:'Informatique de Gestion'}) " +
+                      "MATCH (etuHeds) -[:ETUDIE]-> (r) " +
+                      "MATCH a=shortestPath((fi)-[APPARTIENT*]-(heg)) " +
+                      "MATCH p=shortestPath((etuHeds)-[ETUDIE*]-(fi)) "+
+                      "RETURN p,a,r";
+
+        Result result = bdd.run(rqte);
+        while(result.hasNext()){
+            /**on va recup le result => le transformer en java => et afficher le toString*/
+            System.out.println(result);
+            System.out.println(result.peek()); //=> ca m'affiche le record des 3 returns
+            System.out.println(result.peek().get("p"));
+            result.next();
+        }
+
+        System.out.println("Test print rqtes - END METHOD");
+
 
 
     }
 
+
+
+
+}
 
