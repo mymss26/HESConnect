@@ -5,7 +5,7 @@ import java.util.List;
 public class Filiere {
 
     private String nom;
-    private List<String> competences; //TODO à check
+    private List<String> competences;
 
     public Filiere(String nom, List<String> competences) {
         this.nom = nom;

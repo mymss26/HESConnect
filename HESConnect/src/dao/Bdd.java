@@ -115,6 +115,11 @@ public class Bdd {
     private static void chargerDataFiliere(Session bdd) {
         for(Filiere data : getListeFiliere(bdd)){
            bdd.run("CREATE(:FILIERE{nom:'"+data.getNom()+"',competences:'"+data.getCompetences()+"'})");
+           for(String competence : data.getCompetences()){
+               bdd.run("CREATE(:COMPETENCE{competence:'"+competence+"'})");
+               bdd.run("MATCH (fi:FILIERE), (com:COMPETENCE) WHERE fi.nom='" + data.getNom() + "' AND com.competence='"+competence+ "' CREATE (com) -[:DISPENSEE_DANS]-> (fi)");
+           }
+
         }
     }
 
@@ -125,9 +130,6 @@ public class Bdd {
             bdd.run("CREATE(:HES{nom:'"+e.getNom()+"', adresse:'"+e.getAdresse()+"'})");
         }
     }
-
-
-
 
     //Query 1
     public static void cheminLePlusCourt(Session bdd){
@@ -151,7 +153,7 @@ public class Bdd {
         while(result.hasNext()){
             /**on va recup le result => le transformer en java => et afficher le toString*/
             System.out.println(result);
-            System.out.println(result.peek()); //=> ca m'affiche le record des 3 returns
+            System.out.println(result.peek()); //=> affiche le record des 3 returns
             System.out.println(result.peek().get("p"));
             result.next();
         }
