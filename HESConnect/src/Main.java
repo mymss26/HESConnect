@@ -14,10 +14,6 @@ public class Main {
         new Applic();
 
 
-
-
-
-
-
+        //return nodes(p)[-2] as m, p as j,a,r, etuHeds, heg, fi
     }
 }

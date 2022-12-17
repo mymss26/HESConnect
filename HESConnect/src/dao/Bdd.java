@@ -3,9 +3,12 @@ package dao;
 import domaine.*;
 import metier.FabriquePersonne;
 import metier.FabriquePersonnes;
-import org.neo4j.driver.GraphDatabase;
-import org.neo4j.driver.Result;
-import org.neo4j.driver.Session;
+import org.neo4j.driver.*;
+import org.neo4j.driver.Record;
+import org.neo4j.driver.internal.InternalRecord;
+import org.neo4j.driver.internal.InternalRelationship;
+import org.neo4j.driver.internal.value.RelationshipValue;
+import org.neo4j.driver.types.Relationship;
 
 import java.util.*;
 
@@ -141,21 +144,72 @@ public class Bdd {
             }
         }
         */
+
         System.out.println("Test print rqtes - START METHOD");
         String email = "lgabalaa4@heds.ch";
         String rqte = "MATCH (etuHeds:PERSONNE{mail:'lgabalaa4@heds.ch'}), (heg:HES{nom:'HEG'}), (fi:FILIERE{nom:'Informatique de Gestion'}) " +
                       "MATCH (etuHeds) -[:ETUDIE]-> (r) " +
                       "MATCH a=shortestPath((fi)-[APPARTIENT*]-(heg)) " +
-                      "MATCH p=shortestPath((etuHeds)-[ETUDIE*]-(fi)) "+
-                      "RETURN p,a,r";
+                      "MATCH p=shortestPath((etuHeds)-[t*]-(fi)) "+
+                      "RETURN nodes(p)[-2] as m, t[-1], a, r, etuHeds, heg, fi";
 
-        Result result = bdd.run(rqte);
+        String rqteTest = "MATCH (etuHeds:PERSONNE{mail:'lgabalaa4@heds.ch'}) -[t]-> (etu2:PERSONNE) return t limit 1";
+
+        //nodes(p)[-2] pour recup l'avant dernier qui est le noeud d'une personne de la personne qu'on cherche
+        //t[-1] pour recup la derniere relation entre la personne qu'on cherche et la filère IG pour voir si c'est un prof, etudiant ou assistant
+
+        Result result = bdd.run(rqteTest);
         while(result.hasNext()){
             /**on va recup le result => le transformer en java => et afficher le toString*/
-            System.out.println(result);
-            System.out.println(result.peek()); //=> affiche le record des 3 returns
-            System.out.println(result.peek().get("p"));
-            result.next();
+            Record rec = result.next();
+            if((rec.get("t").get("type")).equals("CONNAIT")){
+                System.out.println("il connait");
+            }else if((rec.get("t").get("type")).equals("ENSEIGNE_POUR")){
+                System.out.println("il enseigne pour");
+            }else if((rec.get("t").get("type")).equals("ASSISTE_POUR")){
+                System.out.println("Il assiste");
+            }else{
+                System.out.println("marche pas");
+            }
+
+
+            System.out.println("    "+ rec.get("t"));
+
+
+            /**
+            System.out.println("etuHeds  : " + rec.get("etuHeds").get("nom").asString()+" "+rec.get("etuHeds").get("prenom").asString());
+            System.out.println("etuHeds filiere etudie a : " + rec.get("r").get("nom").asString());
+
+            System.out.println("cherche qqun etudiant a : "+rec.get("heg").get("nom").asString());
+            System.out.println("qui appartient a la filiere : "+rec.get("fi").get("nom").asString());
+
+            System.out.println("Elle a trouvee : ");
+            System.out.println(rec.get("t[-1]").get("name"));
+            System.out.println("L'etudiant : " + rec.get("m").get("nom").asString()+" "+rec.get("m").get("prenom").asString());
+             */
+            //System.out.println(rec.get("m"));
+            //for(Object s : rec.get("m").get("nom").asList()){
+            //    System.out.println(s);
+            //}
+
+            System.out.println("-----------------------------------------");
+            System.out.println("2eme try --------------------------------");
+
+            /*
+            Map<String, Object> row = rec.get("m").get("nom").asMap();
+            String rows = "";
+            for(Map.Entry<String, Object> column : row.entrySet()){
+                rows+=column.getKey()+":"+column.getValue();
+                System.out.println(rows);
+            }
+            */
+
+            /*
+            System.out.println("result " + result);
+            System.out.println("result.peek() " + result.peek()); //=> affiche le record des 3 returns
+            System.out.println("result.peek().get('p')" + result.peek().get("p"));
+            //System.out.println(String.valueOf());
+            */
         }
 
         System.out.println("Test print rqtes - END METHOD");
