@@ -43,13 +43,18 @@ public class Data {
                     List<String> constructionMailList = constructionMail();
                     String valeurListeMail = "";
                     while (countHES < 60 && !valeurListeMail.equals("@hes.ch")) {
-                        valeurListeMail = constructionMailList.get(randomMail.nextInt(constructionMailList.size()));
+                        try {
+                            valeurListeMail = constructionMailList.get(randomMail.nextInt(constructionMailList.size()));
+                        }
+                        catch (IllegalArgumentException e){}
+
                         data[2] = mail[0] + valeurListeMail;
                     }
                     System.out.println(data[2]);
                     if (valeurListeMail.equals("@hes.ch")) {
                         countHES++;
                     }
+                    System.out.println(countHES);
                     lstPersonne.add(data);
                 }
             }
