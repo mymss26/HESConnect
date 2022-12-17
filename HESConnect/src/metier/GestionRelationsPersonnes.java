@@ -96,6 +96,9 @@ public class GestionRelationsPersonnes {
         }
     }
 
+    /**
+     * Ici inclure les différentes filières
+     * */
     public static void relationAssistantTravailHes(Session bdd) {
 
         List<Personne> listAssistantsHEG = new ArrayList<>(); //4 assistants
