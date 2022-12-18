@@ -79,4 +79,34 @@ public class RequeteBdd {
     }
 
 
+    public static void requeteDeCalcul(Session bdd){
+        System.out.println("2ème requête : Requête de calcul");
+        String rqte = "MATCH a= (e:EVENEMENT)<-[prop:PROPOSE]-(hes:HES)<-[ap:APPARTIENT]-(fi:FILIERE)<-[inconnu]-(p:PERSONNE) " +
+                      "WHERE p.codePostal='1203' OR p.codePostal='1227' OR p.codePostal='1206' OR p.codePostal='1211' " +
+                      "RETURN a";
+        Result result = bdd.run(rqte);
+
+
+
+        System.out.println("********************************\n");
     }
+
+
+    public static void requeteSurLesEvenements(Session bdd){
+        System.out.println("3ème requête : Requête sur les événements");
+        String rqte = "";
+        //Result result = bdd.run(rqte);
+        /**
+         * Afficher chaque évts et afficher ou elles auront lieu
+         * Afficher par évts une liste de personne qui habitent ou l'évt aura lieu
+         * */
+
+
+
+        System.out.println("********************************\n");
+    }
+
+
+
+
+}
