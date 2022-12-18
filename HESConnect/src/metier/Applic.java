@@ -17,6 +17,7 @@ public class Applic {
 
       System.out.println("Les requêtes : ");
       RequeteBdd.cheminLePlusCourt(bdd);
+      RequeteBdd.requeteDeCalcul(bdd);
 
 
   }

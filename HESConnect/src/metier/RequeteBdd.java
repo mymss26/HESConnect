@@ -5,6 +5,7 @@ import domaine.Assistant;
 import domaine.Etudiant;
 import domaine.Personne;
 import domaine.Prof;
+import io.netty.util.collection.IntObjectMap;
 import org.neo4j.driver.Record;
 import org.neo4j.driver.Result;
 import org.neo4j.driver.Session;
@@ -81,10 +82,45 @@ public class RequeteBdd {
 
     public static void requeteDeCalcul(Session bdd){
         System.out.println("2ème requête : Requête de calcul");
-        String rqte = "MATCH a= (e:EVENEMENT)<-[prop:PROPOSE]-(hes:HES)<-[ap:APPARTIENT]-(fi:FILIERE)<-[inconnu]-(p:PERSONNE) " +
-                      "WHERE p.codePostal='1203' OR p.codePostal='1227' OR p.codePostal='1206' OR p.codePostal='1211' " +
-                      "RETURN a";
-        Result result = bdd.run(rqte);
+
+        //Cette rqte nous retourne la compétence la plus demandée parmi les étudiants
+        String rqtePourGetCompetence = "MATCH (etu:PERSONNE)-[r:ETUDIE]->(n:FILIERE)-[:DISPENSEE_DANS]-(c:COMPETENCE) " +
+                                       "WITH  count(etu) as num_etu, c.competence as competence " +
+                                       "MATCH (etu:PERSONNE)-[r:ETUDIE]->() " +
+                                       "WITH  num_etu, count(etu) as total_etu, competence " +
+                                       "WITH num_etu, competence " +
+                                       "MATCH (n:FILIERE)-[:DISPENSEE_DANS]-(c:COMPETENCE {competence: competence}) " +
+                                       "RETURN  c.competence as competence, num_etu " +
+                                       "LIMIT 1";
+
+
+        //Cette rqte nous retourne la filière ainsi que le pourcentage de personne qui ont la compétence de la requête ci-dessus
+        String rqteFilierePourcentage = "MATCH (etu:PERSONNE)-[r:ETUDIE]->(n:FILIERE) " +
+                                        "WITH n, count(etu) as num_etu " +
+                                        "MATCH (etu:PERSONNE)-[r:ETUDIE]->() " +
+                                        "WITH n, num_etu, count(etu) as total_etu " +
+                                        "RETURN n.nom as filiere, round(100.0 * num_etu / total_etu) as percentage  " +
+                                        "ORDER BY percentage DESC";
+
+        Result result1 = bdd.run(rqtePourGetCompetence);
+        Result result2 = bdd.run(rqteFilierePourcentage);
+
+        //1er MATCH
+        while(result1.hasNext()){
+            Record rec = result1.next();
+            String nomCompetence = rec.get("competence").asString();
+            int nombreEtu = rec.get("num_etu").asInt();
+            System.out.println("La compétence la plus demandée ("+nombreEtu+" personnes) est : "+ nomCompetence);
+        }
+
+        //2e MATCH
+        while(result2.hasNext()){
+            Record rec = result2.next();
+            String nomFiliere = rec.get("filiere").asString();
+            int pourcentage = rec.get("percentage").asInt();
+
+            System.out.printf("Filière : %s, Pourcentage: %d%%\n", nomFiliere, pourcentage); /**print f*/
+        }
 
 
 
