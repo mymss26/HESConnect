@@ -56,7 +56,7 @@ public class RequeteBdd {
                     case "ASSISTE_POUR":typeRelation="assistant";break;
                 }
                 System.out.println("L'étudiant "+ personne.get("nom").asString()+" "+personne.get("prenom").asString()+" qui étudie dans la filière "+ecole.get("nom").asString());
-                System.out.println("Peut contacter "+connaissance.get("nom").asString()+" "+connaissance.get("prenom")+" ("+typeRelation+") à ce mail :"+connaissance.get("mail"));
+                System.out.println("Peut contacter "+connaissance.get("nom").asString()+" "+connaissance.get("prenom").asString()+" ("+typeRelation+") à ce mail :"+connaissance.get("mail"));
             }
         }
     }
