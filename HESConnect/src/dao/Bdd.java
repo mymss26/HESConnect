@@ -104,7 +104,7 @@ public class Bdd {
         for(String[] data : filiere){
             ArrayList<String> lstCompetences = new ArrayList<>();
             if(data.length>2) {
-                for (int i = 1; i < data.length; i++) {
+                for (int i = 2; i < data.length; i++) {
                     lstCompetences.add(data[i]);
                 }
             }
