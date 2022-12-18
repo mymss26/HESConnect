@@ -116,16 +116,19 @@ public class Bdd {
         }
 
     private static void chargerDataFiliere(Session bdd) { // creation des noeud filiere et competence. Creation de la relation qui les lie
+        Set<String> listeCompetences = new HashSet<>();
         for(Filiere data : getListeFiliere(bdd)){
            bdd.run("CREATE(:FILIERE{nom:'"+data.getNom()+"'})");
            for(String competence : data.getCompetences()){
-               bdd.run("CREATE(:COMPETENCE{competence:'"+competence+"'})");
+               if(!listeCompetences.contains(competence)){
+                   bdd.run("CREATE(:COMPETENCE{competence:'"+competence+"'})");
+                    listeCompetences.add(competence);
+               }
                bdd.run("MATCH (fi:FILIERE), (com:COMPETENCE) WHERE fi.nom='" + data.getNom() + "' AND com.competence='"+competence+ "' CREATE (com) -[:DISPENSEE_DANS]-> (fi)");
            }
 
         }
     }
-
 
 
     public static void chargerDataHES(Session bdd){
