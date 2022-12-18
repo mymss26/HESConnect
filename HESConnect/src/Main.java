@@ -2,6 +2,7 @@ import dao.Bdd;
 import dao.Data;
 import domaine.*;
 import metier.Applic;
+import metier.RequeteBdd;
 import org.neo4j.driver.Session;
 
 import java.util.ArrayList;
@@ -14,6 +15,5 @@ public class Main {
         new Applic();
 
 
-        //return nodes(p)[-2] as m, p as j,a,r, etuHeds, heg, fi
     }
 }

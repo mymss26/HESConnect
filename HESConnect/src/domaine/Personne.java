@@ -1,5 +1,7 @@
 package domaine;
 
+import org.neo4j.driver.Value;
+
 public abstract class Personne {
     String nom,prenom,mail,genre;
     int codePostal;
