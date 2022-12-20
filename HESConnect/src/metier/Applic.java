@@ -19,6 +19,9 @@ public class Applic {
       RequeteBdd.cheminLePlusCourt(bdd);
       RequeteBdd.requeteDeCalcul(bdd);
 
+      //insérer un thème
+      RequeteBdd.barreDeRecherche("asdf", bdd);
+
 
   }
 

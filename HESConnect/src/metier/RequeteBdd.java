@@ -5,20 +5,22 @@ import domaine.Assistant;
 import domaine.Etudiant;
 import domaine.Personne;
 import domaine.Prof;
-import io.netty.util.collection.IntObjectMap;
+import org.neo4j.driver.*;
 import org.neo4j.driver.Record;
-import org.neo4j.driver.Result;
-import org.neo4j.driver.Session;
+import org.neo4j.driver.exceptions.NoSuchRecordException;
+import org.neo4j.driver.exceptions.TransientException;
 import org.neo4j.driver.types.Node;
-import org.neo4j.driver.types.Path;
 import org.neo4j.driver.types.Relationship;
 
-import javax.swing.text.html.parser.Parser;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class RequeteBdd {
+
+    private static Driver driver;
 
     // cette methode récupère de maniere aléatoire le mail d'un étudiant en heds et sera utilisé dans la requete #1
     public static Personne getMailAleatoireEtudiantHeds() {
@@ -118,7 +120,6 @@ public class RequeteBdd {
             System.out.println("\tFilière : "+nomFiliere.get("nom").asString()+", nombre d'étudiants : "+nombreEtu);
         }
         System.out.println("La compétence la plus demandée ("+totalEtu+" personnes) est : "+ nomCompetence.get("competence").asString());
-
         System.out.println("********************************\n");
     }
 
@@ -130,12 +131,45 @@ public class RequeteBdd {
         /**
          * Afficher chaque évts et afficher ou elles auront lieu
          * Afficher par évts une liste de personne qui habitent ou l'évt aura lieu
-         * */
-
-
+         **/
 
         System.out.println("********************************\n");
     }
+
+
+    public static void barreDeRecherche(String theme, Session bdd){
+        try {
+            String rqte = "MATCH (e:EVENEMENT)-[]-(n) " +
+                    "WHERE e.thematique " +
+                    "CONTAINS $theme " +
+                    "RETURN e, n ";
+            Map<String, Object> parametres = Map.of("theme", theme);
+            System.out.println("Le thème recherché est : '" + theme + "' :");
+
+
+
+            AtomicReference<String> hesNom = new AtomicReference<>(""); //pour sortir la resultat de la fonction lambda
+            bdd.run(rqte, parametres).forEachRemaining(record -> {
+                Node neoudEvt = record.get("e").asNode();
+                Node noeudN = record.get("n").asNode();
+
+                System.out.println("Evenement : " + neoudEvt.get("nom").asString());
+                hesNom.set(noeudN.get("nom").asString());
+            });
+            /**MARCHE PAS*/
+            if(hesNom!=null){
+                System.out.println("Ecole organisatrice : " + hesNom);
+            }
+
+            /**L'EXCEPTION NE SE DECLENCHE PAS*/
+        }catch (NoSuchRecordException e){
+            System.out.println("Il n'y a aucun événement avec le thème choisi : '" + theme+"'");
+            System.out.println(e.getMessage());
+        }
+
+    }
+
+
 
 
 
