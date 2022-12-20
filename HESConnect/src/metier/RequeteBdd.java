@@ -146,8 +146,6 @@ public class RequeteBdd {
             Map<String, Object> parametres = Map.of("theme", theme);
             System.out.println("Le thème recherché est : '" + theme + "' :");
 
-
-
             AtomicReference<String> hesNom = new AtomicReference<>(""); //pour sortir la resultat de la fonction lambda
             bdd.run(rqte, parametres).forEachRemaining(record -> {
                 Node neoudEvt = record.get("e").asNode();

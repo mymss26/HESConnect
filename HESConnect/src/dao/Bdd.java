@@ -121,10 +121,10 @@ public class Bdd {
            bdd.run("CREATE(:FILIERE{nom:'"+data.getNom()+"'})");
            for(String competence : data.getCompetences()){
                if(!listeCompetences.contains(competence)){
-                   bdd.run("CREATE(:COMPETENCE{competence:'"+competence+"'})");
-                    listeCompetences.add(competence);
+                   bdd.run("CREATE(:COMPETENCE{competence:'"+competence.toUpperCase()+"'})");
+                    listeCompetences.add(competence.toUpperCase());
                }
-               bdd.run("MATCH (fi:FILIERE), (com:COMPETENCE) WHERE fi.nom='" + data.getNom() + "' AND com.competence='"+competence+ "' CREATE (com) -[:DISPENSEE_DANS]-> (fi)");
+               bdd.run("MATCH (fi:FILIERE), (com:COMPETENCE) WHERE fi.nom='" + data.getNom() + "' AND com.competence='"+competence.toUpperCase()+ "' CREATE (com) -[:DISPENSEE_DANS]-> (fi)");
            }
 
         }

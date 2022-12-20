@@ -76,10 +76,10 @@ public class Data {
                 ArrayList<String> lstThematique = new ArrayList<>();
                 if (data.length > 1) {
                     for (int i = 1; i < data.length; i++) {
-                        lstThematique.add(data[i]);
+                        lstThematique.add(data[i].toUpperCase());
                     }
                 } else {
-                    lstThematique.add(data[1]);
+                    lstThematique.add(data[1].toUpperCase());
                 }
                 lstEvenement.add(new Evenement(data[0], lstThematique));
             }
