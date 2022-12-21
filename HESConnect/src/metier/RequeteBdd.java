@@ -1,10 +1,7 @@
 package metier;
 
 import dao.Bdd;
-import domaine.Assistant;
-import domaine.Etudiant;
-import domaine.Personne;
-import domaine.Prof;
+import domaine.*;
 import org.neo4j.driver.*;
 import org.neo4j.driver.Record;
 import org.neo4j.driver.exceptions.Neo4jException;
@@ -148,18 +145,39 @@ public class RequeteBdd {
             }
 
             String nomEcole = "";
+            String adresseEcole = "";
+            String nomEvenenement = "";
+
             System.out.println("Le thème recherché est : '" + theme + "' :");
+
             Iterator var5 = result.iterator();
 
             while(var5.hasNext()) {
                 Record record = (Record)var5.next();
                 Node neoudEvt = record.get("e").asNode();
                 Node noeudN = record.get("n").asNode();
+
+                nomEvenenement = neoudEvt.get("nom").asString();
+                Evenement evenement = new Evenement(nomEvenenement);
+
                 nomEcole = noeudN.get("nom").asString();
-                System.out.println("Evenement : " + neoudEvt.get("nom").asString());
+                adresseEcole = noeudN.get("adresse").asString();
+
+                System.out.println("Evenement : " + evenement.getNomEvenement());
+            }
+            HES hes = null;
+            if(nomEcole.equalsIgnoreCase("heg")){
+                hes = new HEG(nomEcole, adresseEcole);
+            }else if (nomEcole.equalsIgnoreCase("heds")){
+                hes = new HEDS(nomEcole, adresseEcole);
+            }else if(nomEcole.equalsIgnoreCase("head")){
+                hes = new HEAD(nomEcole, adresseEcole);
+            } else if (nomEcole.equalsIgnoreCase("hets")) {
+                hes = new HETS(nomEcole, adresseEcole);
             }
 
-            System.out.println("Ces événements sont proposé par l' " + nomEcole);
+            assert hes != null;
+            System.out.println("Ces événements sont proposé par l' " + hes.getNom());
         } catch (Exception var9) {
             System.err.println("Erreur lors de l'exécution de la requête \nMessage : " + var9.getMessage());
         }
