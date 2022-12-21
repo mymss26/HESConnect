@@ -96,7 +96,7 @@ public class RequeteBdd {
             }
             System.out.println("********************************\n");
         } catch (NullPointerException e) {
-            System.out.println("L'étudiant ne connait personne dans son réseau pour contacter une personne d'IG");
+            System.out.println("L'étudiant ne connait personne dans son réseau capable de l'aider à contacter une personne d'IG");
 
         }
     }
@@ -113,7 +113,6 @@ public class RequeteBdd {
                     "WITH n, count(etu) as num_etu, c " +
                     "RETURN n, c, num_etu  " +
                     "order by num_etu DESC";
-
 
             Result result = bdd.run(rqte);
 
@@ -161,7 +160,7 @@ public class RequeteBdd {
         Node personne = null;
         Node filiere = null;
         if (!result.hasNext()) {
-            throw new Neo4jException("Il est possible que cette requête n'ai permis de trouver aucun résultat. Essayez avec une nouvelle personne.");
+            throw new Neo4jException("Il est possible que cette requête n'ai permis de trouver aucun résultat.");
         }
         while (result.hasNext()) {
             Record rec = result.next();
@@ -175,7 +174,6 @@ public class RequeteBdd {
             }
             listeCompetence.add(comp);
             listeThematique.add(thematique);
-
         }
         if (!listeEvenements.isEmpty()) {
             System.out.println("Voici la liste d'événement(s) proposé(s) à " + personne.get("nom").asString() + " " + personne.get("prenom").asString() + "(" + filiere.get("nom").asString() + ")");
@@ -183,7 +181,6 @@ public class RequeteBdd {
                 System.out.println("- '" + listeEvenements.get(i) + "'");
             }
         }
-
     }
 
 
