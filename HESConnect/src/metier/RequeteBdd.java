@@ -8,8 +8,6 @@ import domaine.Prof;
 import org.neo4j.driver.*;
 import org.neo4j.driver.Record;
 import org.neo4j.driver.exceptions.Neo4jException;
-import org.neo4j.driver.exceptions.NoSuchRecordException;
-import org.neo4j.driver.exceptions.TransientException;
 import org.neo4j.driver.types.Node;
 import org.neo4j.driver.types.Relationship;
 
@@ -165,10 +163,4 @@ public class RequeteBdd {
         }
 
     }
-
-
-
-
-
-
 }
