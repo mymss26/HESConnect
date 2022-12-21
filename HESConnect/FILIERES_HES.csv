@@ -1,8 +1,8 @@
-HEG;International Business Management;Gestion de projet;;;;
-HEG;Informatique de Gestion;Programmation ;Gestion de projet numérique;Communication;;
-HEG;Economie d’entreprise;Gestion de projet;Economie;Communication;;
-HEAD;Art Visuel;Gestion de projet;Histoire de l art;Art numérique;;
-HEAD;Architecture d intérieur ;Design objet;Gestion de projet;Fondamentaux techniques;;
-HEDS;Sage-femme;Anatomie;Obstétrique;Gestion des situations critiques;éthique;santé
-HEDS;Nutrition et Diététique;Anatomie;Science des aliments;Communication;éthique;santé
-HETS;Travail Social;Gestion des situations critiques;Communication;éthique;santé;
+HEG;International Business Management;Gestion de projet;
+HEG;Informatique de Gestion;Programmation ;Gestion de projet;Communication;
+HEG;Economie d’entreprise;Gestion de projet;Economie;Communication;
+HEAD;Art Visuel;Gestion de projet;Histoire de l art;Art numérique;
+HEAD;Architecture d intérieur ;Design objet;Gestion de projet;Fondamentaux techniques;
+HEDS;Sage-femme;Anatomie;Obstétrique;Gestion des situations critiques;
+HEDS;Nutrition et Diététique;Anatomie;Science des aliments;Communication;
+HETS;Travail Social;Gestion des situations critiques;Communication;
