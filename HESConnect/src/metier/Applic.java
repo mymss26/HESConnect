@@ -18,13 +18,13 @@ public class Applic {
          System.out.println("Les requêtes : ");
          RequeteBdd.cheminLePlusCourt(bdd);
          RequeteBdd.requeteDeCalcul(bdd);
-
+         RequeteBdd.requeteSurLesEvenements(bdd);
          //insérer un thème
          String theme = "droit";
          RequeteBdd.barreDeRecherche(theme.toUpperCase(), bdd);
 
 
-         RequeteBdd.lePlusDeFollowers(bdd);
+         //RequeteBdd.lePlusDeFollowers(bdd);
 
      }catch (Exception e){
          System.err.println("Erreur de connexion à la base de données \nMessage : " + e.getMessage());

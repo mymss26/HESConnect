@@ -9,12 +9,10 @@ import org.neo4j.driver.exceptions.NoSuchRecordException;
 import org.neo4j.driver.exceptions.TransientException;
 import org.neo4j.driver.types.Node;
 import org.neo4j.driver.types.Relationship;
+import org.w3c.dom.ls.LSOutput;
 
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class RequeteBdd {
@@ -25,12 +23,22 @@ public class RequeteBdd {
     public static Personne getMailAleatoireEtudiantHeds() {
         Random rand = new Random();
         List<Personne> listeEtudiants = Bdd.getListeEtudiant();
-        Personne mailEtudiant=null;
-        while(mailEtudiant==null || !mailEtudiant.getMail().contains("@heds.ch")) {
-             mailEtudiant = listeEtudiants.get(rand.nextInt(listeEtudiants.size()));
+        Personne mailEtudiant = null;
+        while (mailEtudiant == null || !mailEtudiant.getMail().contains("@heds.ch")) {
+            mailEtudiant = listeEtudiants.get(rand.nextInt(listeEtudiants.size()));
         }
         return mailEtudiant;
+    }
+
+    public static Personne getMailAleatoireEtudiant() {
+        Random rand = new Random();
+        List<Personne> listeEtudiants = Bdd.getListeEtudiant();
+        Personne mailEtudiant = null;
+        while (mailEtudiant == null) {
+            mailEtudiant = listeEtudiants.get(rand.nextInt(listeEtudiants.size()));
         }
+        return mailEtudiant;
+    }
 
     //Requête #1 :trouve le chemin le plus court afin d'aider l'étudiant X en heds à trouver un developper en IG pour dev. son projet informatique
     public static void cheminLePlusCourt(Session bdd) {
@@ -47,7 +55,7 @@ public class RequeteBdd {
 
             Result result = bdd.run(rqte);
 
-            if(!result.hasNext()){
+            if (!result.hasNext()) {
                 throw new Neo4jException("Aucun résultat trouvé pour cette requête.");
             }
 
@@ -58,7 +66,6 @@ public class RequeteBdd {
                     Node etuHeds = record.get("etuHeds").asNode();
                     Node ecole = record.get("r").asNode();
                     Node connaissance = record.get("avantDernierNoeud").asNode();
-
 
 
                     Relationship relationConnaissance = record.get("dernierRelation").asRelationship();
@@ -88,7 +95,7 @@ public class RequeteBdd {
                 }
             }
             System.out.println("********************************\n");
-        }catch (NullPointerException e){
+        } catch (NullPointerException e) {
             System.out.println("L'étudiant ne connait personne dans son réseau pour contacter une personne d'IG");
 
         }
@@ -133,25 +140,55 @@ public class RequeteBdd {
             System.out.println("La compétence la plus demandée (" + totalEtu + " personnes) est : " + nomCompetence.get("competence").asString());
             System.out.println("********************************\n");
         } catch (Exception e) {
-            System.err.println("Une erreur s'est produite lors de l'exécution de la requête \nMessage : "+e.getMessage());
+            System.err.println("Une erreur s'est produite lors de l'exécution de la requête \nMessage : " + e.getMessage());
         }
     }
 
 
-    public static void requeteSurLesEvenements(Session bdd){
-        System.out.println("3ème requête : Requête sur les événements");
-        String rqte = "";
-        //Result result = bdd.run(rqte);
-        /**
-         * Afficher chaque évts et afficher ou elles auront lieu
-         * Afficher par évts une liste de personne qui habitent ou l'évt aura lieu
-         **/
+    public static void requeteSurLesEvenements(Session bdd) {
+        System.out.println("3ème requête : Proposition d'événements en lien avec les compétences d'un etudiant et thématiques d'un événement ");
+        String email = getMailAleatoireEtudiant().getMail();
+        String rqte = "MATCH (p:PERSONNE {mail:'" + email + "'})-[:ETUDIE]->(fi:FILIERE)-[]-(c:COMPETENCE) " +
+                "WITH c,p,fi " +
+                "MATCH (e:EVENEMENT)-[:PROPOSE]-(hes:HES) " +
+                "WITH c.competence as motC, e.thematique as motT,e,p,fi " + "where motT contains motC " +
+                "RETURN motC,motT,e,p,fi ";
+        Result result = bdd.run(rqte);
 
-        System.out.println("********************************\n");
+        List<String> listeCompetence = new ArrayList<>();
+        List<String> listeEvenements = new ArrayList<>();
+        List<String> listeThematique = new ArrayList<>();
+        Node personne = null;
+        Node filiere = null;
+        if (!result.hasNext()) {
+            throw new Neo4jException("Il est possible que cette requête n'ai permis de trouver aucun résultat. Essayez avec une nouvelle personne.");
+        }
+        while (result.hasNext()) {
+            Record rec = result.next();
+            Node evenement = rec.get("e").asNode();
+            String comp = rec.get("motC").asString();
+            String thematique = rec.get("motT").asString();
+            personne = rec.get("p").asNode();
+            filiere = rec.get("fi").asNode();
+            if (!listeEvenements.contains(evenement.get("nom").asString())) {
+                listeEvenements.add(evenement.get("nom").asString());
+            }
+            listeCompetence.add(comp);
+            listeThematique.add(thematique);
+
+        }
+        if (!listeEvenements.isEmpty()) {
+            System.out.println("Voici la liste d'événement(s) proposé(s) à " + personne.get("nom").asString() + " " + personne.get("prenom").asString() + "(" + filiere.get("nom").asString() + ")");
+            for (int i = 0; i < listeEvenements.size(); i++) {
+                System.out.println("- '" + listeEvenements.get(i) + "'");
+            }
+        }
+
     }
 
 
-    public static void barreDeRecherche(String theme, Session bdd){
+    public static void barreDeRecherche(String theme, Session bdd) {
+        System.out.println("********************************");
         try {
             System.out.println("4ème requête : Barre de recherche");
             String rqte = "MATCH (e:EVENEMENT)-[]-(n) WHERE e.thematique CONTAINS $theme RETURN e, n ";
@@ -169,8 +206,8 @@ public class RequeteBdd {
 
             Iterator it = result.iterator();
 
-            while(it.hasNext()) {
-                Record record = (Record)it.next();
+            while (it.hasNext()) {
+                Record record = (Record) it.next();
                 Node neoudEvt = record.get("e").asNode();
                 Node noeudN = record.get("n").asNode();
 
@@ -184,20 +221,20 @@ public class RequeteBdd {
                 cpteEvt++;
             }
             HES hes = null;
-            if(nomEcole.equalsIgnoreCase("heg")){
+            if (nomEcole.equalsIgnoreCase("heg")) {
                 hes = new HEG(nomEcole, adresseEcole);
-            }else if (nomEcole.equalsIgnoreCase("heds")){
+            } else if (nomEcole.equalsIgnoreCase("heds")) {
                 hes = new HEDS(nomEcole, adresseEcole);
-            }else if(nomEcole.equalsIgnoreCase("head")){
+            } else if (nomEcole.equalsIgnoreCase("head")) {
                 hes = new HEAD(nomEcole, adresseEcole);
             } else if (nomEcole.equalsIgnoreCase("hets")) {
                 hes = new HETS(nomEcole, adresseEcole);
             }
 
             assert hes != null;
-            if(cpteEvt==1){
+            if (cpteEvt == 1) {
                 System.out.print("Cet événement est proposé ");
-            }else{
+            } else {
                 System.out.print("Ces événements sont proposés ");
             }
             System.out.println("par l' " + hes.getNom());
@@ -213,18 +250,18 @@ public class RequeteBdd {
         try {
             System.out.println("5ème requête : Celui qui a le plus de followers");
             String rqte = "MATCH (p:PERSONNE)<-[:CONNAIT]-(c:PERSONNE) " +
-                          "WITH p, COUNT(*) AS count " +
-                          "ORDER BY count DESC " +
-                          "LIMIT 1 " +
-                          "MATCH (p)-[:CONNAIT]-(c) " +
-                          "MATCH (fi:FILIERE)<-[]-(p) " +
-                          "RETURN fi, p, c, count ";
+                    "WITH p, COUNT(*) AS count " +
+                    "ORDER BY count DESC " +
+                    "LIMIT 1 " +
+                    "MATCH (p)-[:CONNAIT]-(c) " +
+                    "MATCH (fi:FILIERE)<-[]-(p) " +
+                    "RETURN fi, p, c, count ";
 
             Result result = bdd.run(rqte);
             if (!result.hasNext()) {
                 throw new Neo4jException("Erreur dans la requête");
             }
-            while(result.hasNext()){
+            while (result.hasNext()) {
                 Record record = result.next();
                 Node filiereNode = record.get("fi").asNode();
                 String filiereName = filiereNode.get("name").asString();
