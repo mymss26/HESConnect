@@ -12,6 +12,10 @@ public class Filiere {
         this.competences = competences;
     }
 
+    public Filiere(String nom){
+        this.nom = nom;
+    }
+
 
     public String getNom() {
         return nom;

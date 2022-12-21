@@ -5,7 +5,6 @@ import org.neo4j.driver.Session;
 
 public class Applic {
   public Applic()  {
-
      try{
          Session bdd = Bdd.connect_db();
          Bdd.setup_env(bdd);
@@ -21,8 +20,11 @@ public class Applic {
          RequeteBdd.requeteDeCalcul(bdd);
 
          //insérer un thème
-         String theme = "musique";
+         String theme = "droit";
          RequeteBdd.barreDeRecherche(theme.toUpperCase(), bdd);
+
+
+         RequeteBdd.lePlusDeFollowers(bdd);
 
      }catch (Exception e){
          System.err.println("Erreur de connexion à la base de données \nMessage : " + e.getMessage());
