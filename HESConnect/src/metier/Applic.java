@@ -21,15 +21,12 @@ public class Applic {
          RequeteBdd.requeteDeCalcul(bdd);
 
          //insérer un thème
-         RequeteBdd.barreDeRecherche("musique", bdd);
+         String theme = "musique";
+         RequeteBdd.barreDeRecherche(theme.toUpperCase(), bdd);
 
      }catch (Exception e){
          System.err.println("Erreur de connexion à la base de données \nMessage : " + e.getMessage());
      }
-
-
-
-
   }
 
 }
