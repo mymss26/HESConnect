@@ -19,8 +19,8 @@ public class Bdd {
     static List<Personne> listeAssistants = new ArrayList<>();
 
 
-    public static Session connect_db(){
-            return GraphDatabase.driver("bolt://localhost:7687").session();
+    public static Session connect_db() {
+        return GraphDatabase.driver("bolt://localhost:7687").session();
     }
 
     public static void setup_env(Session bdd) {

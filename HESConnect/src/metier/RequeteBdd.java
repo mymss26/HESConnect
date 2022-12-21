@@ -7,12 +7,14 @@ import domaine.Personne;
 import domaine.Prof;
 import org.neo4j.driver.*;
 import org.neo4j.driver.Record;
+import org.neo4j.driver.exceptions.Neo4jException;
 import org.neo4j.driver.exceptions.NoSuchRecordException;
 import org.neo4j.driver.exceptions.TransientException;
 import org.neo4j.driver.types.Node;
 import org.neo4j.driver.types.Relationship;
 
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -139,30 +141,27 @@ public class RequeteBdd {
 
     public static void barreDeRecherche(String theme, Session bdd){
         try {
-            String rqte = "MATCH (e:EVENEMENT)-[]-(n) " +
-                    "WHERE e.thematique " +
-                    "CONTAINS $theme " +
-                    "RETURN e, n ";
-            Map<String, Object> parametres = Map.of("theme", theme);
-            System.out.println("Le thème recherché est : '" + theme + "' :");
-
-            AtomicReference<String> hesNom = new AtomicReference<>(""); //pour sortir la resultat de la fonction lambda
-            bdd.run(rqte, parametres).forEachRemaining(record -> {
-                Node neoudEvt = record.get("e").asNode();
-                Node noeudN = record.get("n").asNode();
-
-                System.out.println("Evenement : " + neoudEvt.get("nom").asString());
-                hesNom.set(noeudN.get("nom").asString());
-            });
-            /**MARCHE PAS*/
-            if(hesNom!=null){
-                System.out.println("Ecole organisatrice : " + hesNom);
+            String rqte = "MATCH (e:EVENEMENT)-[]-(n) WHERE e.thematique CONTAINS $theme RETURN e, n ";
+            Iterable<Record> result = bdd.run(rqte, Values.parameters(new Object[]{"theme", theme})).list();
+            if (!result.iterator().hasNext()) {
+                throw new Neo4jException("Aucun événement trouvé avec le thème '" + theme + "'");
             }
 
-            /**L'EXCEPTION NE SE DECLENCHE PAS*/
-        }catch (NoSuchRecordException e){
-            System.out.println("Il n'y a aucun événement avec le thème choisi : '" + theme+"'");
-            System.out.println(e.getMessage());
+            String nomEcole = "";
+            System.out.println("Le thème recherché est : '" + theme + "' :");
+            Iterator var5 = result.iterator();
+
+            while(var5.hasNext()) {
+                Record record = (Record)var5.next();
+                Node neoudEvt = record.get("e").asNode();
+                Node noeudN = record.get("n").asNode();
+                nomEcole = noeudN.get("nom").asString();
+                System.out.println("Evenement : " + neoudEvt.get("nom").asString());
+            }
+
+            System.out.println("Ces événements sont proposé par l' " + nomEcole);
+        } catch (Exception var9) {
+            System.err.println("Erreur lors de l'exécution de la requête \nMessage : " + var9.getMessage());
         }
 
     }
