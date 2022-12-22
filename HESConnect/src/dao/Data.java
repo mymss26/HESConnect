@@ -4,17 +4,14 @@ import domaine.Evenement;
 import domaine.Filiere;
 
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 public class Data {
 
-    private static final String FILENAME_Personne = "PERSONNES.csv";
+    private static final String FILENAME_Personne = "Personne_2.csv";
     private static final String FILENAME_Evenement = "EVENEMENTS.csv";
     private static final String FILENAME_Filiere = "FILIERES_HES.csv";
 
@@ -22,7 +19,8 @@ public class Data {
         List<String> lstMail = new ArrayList<>();
         lstMail.add("@heg.ch");
         lstMail.add("@head.ch");
-        lstMail.add("@hes.ch");
+        lstMail.add("@prof.hes.ch");
+        lstMail.add("@ass.hes.ch");
         lstMail.add("@heds.ch");
         lstMail.add("@hets.ch");
         return lstMail;
@@ -31,30 +29,32 @@ public class Data {
     public static List<String[]> listePersonnes() {
         try {
             Random randomMail = new Random();
-            BufferedReader reader = new BufferedReader(new FileReader(FILENAME_Personne));
+            BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(FILENAME_Personne), "UTF-8"));
             List<String[]> lstPersonne = new ArrayList<>();
             String ligne;
             int countHES = 0;
             while ((ligne = reader.readLine()) != null) {
-                String[] data = ligne.split(";");
+                String[] data = ligne.split(",");
                 String ancienMail = data[2];
                 if (ancienMail.contains("@")) {
                     String[] mail = ancienMail.split("@");
                     List<String> constructionMailList = constructionMail();
                     String valeurListeMail = "";
-                    while (countHES < 60 && !valeurListeMail.equals("@hes.ch")) { // 60 profs & assistants
-                        try {
-                            valeurListeMail = constructionMailList.get(randomMail.nextInt(constructionMailList.size()));
+                    try {
+                        valeurListeMail = constructionMailList.get(randomMail.nextInt(constructionMailList.size()));
+                        if (valeurListeMail.equals("@prof.hes.ch")) { // dans le cas où la valeur récupéré est @prof.hes.ch
+                            countHES++;
+                            if (countHES < 50) { // si le nombre de mail ayant utilisé @prof.hets.ch reste inferieur à 50
+                                data[2] = mail[0] + valeurListeMail;
+                            } // on peu concaténer
+                            else { // sinon, on relance le random pour avoir un autre mail
+                                valeurListeMail = constructionMailList.get(randomMail.nextInt(constructionMailList.size()));
+                            }
                         }
-                        catch (IllegalArgumentException e){}
-
                         data[2] = mail[0] + valeurListeMail;
+                    } catch (IllegalArgumentException e) {
                     }
-                    //System.out.println(data[2]);
-                    if (valeurListeMail.equals("@hes.ch")) {
-                        countHES++;
-                    }
-                    //System.out.println(countHES);
+                    data[2] = mail[0] + valeurListeMail;
                     lstPersonne.add(data);
                 }
             }

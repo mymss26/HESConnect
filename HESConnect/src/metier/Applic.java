@@ -11,10 +11,10 @@ public class Applic {
          GestionRelationsPersonnes.creerRelations(bdd);
          GestionRelationsFilieres.loadRelationFiliere(bdd);
          GestionRelationsEvenements.relationHESetEvenement(bdd);
-         System.out.println("Process executed");
+         System.out.println("****PROCESS EXECUTED****\n");
 
          try{
-             System.out.println("Les requêtes : ");
+             System.out.println("****LES REQUETES****\n");
              RequeteBdd.cheminLePlusCourt(bdd);
              RequeteBdd.requeteDeCalcul(bdd);
              RequeteBdd.requeteSurLesEvenements(bdd);
@@ -26,7 +26,6 @@ public class Applic {
          }catch (Exception e){
              e.printStackTrace();
          }
-
 
      }catch (Exception e){
          System.err.println("Erreur de connexion à la base de données \nMessage : " + e.getMessage());

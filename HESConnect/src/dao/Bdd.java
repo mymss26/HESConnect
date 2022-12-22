@@ -47,10 +47,10 @@ public class Bdd {
            p = fabrique.nouvellePersonne(data);
 
            bdd.run("CREATE (:PERSONNE{nom:'"+p.getNom()+"',prenom:'"+p.getPrenom()+"',mail:'"+p.getMail()+"',genre:'"+p.getGenre()+"', codePostal:'"+p.getCodePostal()+"'})");
-           switch (data[5]){
+           switch (p.getClass().getSimpleName().toUpperCase()){
                case "ETUDIANT": listeEtudiants.add(p);break;
                case "ASSISTANT": listeAssistants.add(p);break;
-               case "PROFESSEUR": listeProfesseurs.add(p);break;
+               case "PROF": listeProfesseurs.add(p);break;
            }
        }
     }
