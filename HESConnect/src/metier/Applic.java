@@ -10,21 +10,23 @@ public class Applic {
          Bdd.setup_env(bdd);
          GestionRelationsPersonnes.creerRelations(bdd);
          GestionRelationsFilieres.loadRelationFiliere(bdd);
-
          GestionRelationsEvenements.relationHESetEvenement(bdd);
-
          System.out.println("Process executed");
 
-         System.out.println("Les requêtes : ");
-         RequeteBdd.cheminLePlusCourt(bdd);
-         RequeteBdd.requeteDeCalcul(bdd);
-         RequeteBdd.requeteSurLesEvenements(bdd);
-         //insérer un thème
-         String theme = "droit";
-         RequeteBdd.barreDeRecherche(theme.toUpperCase(), bdd);
+         try{
+             System.out.println("Les requêtes : ");
+             RequeteBdd.cheminLePlusCourt(bdd);
+             RequeteBdd.requeteDeCalcul(bdd);
+             RequeteBdd.requeteSurLesEvenements(bdd);
+             //insérer un thème
+             String theme = "droit";
+             RequeteBdd.barreDeRecherche(theme.toUpperCase(), bdd);
 
+             RequeteBdd.lePlusDeFollowers(bdd);
+         }catch (Exception e){
+             e.printStackTrace();
+         }
 
-         //RequeteBdd.lePlusDeFollowers(bdd);
 
      }catch (Exception e){
          System.err.println("Erreur de connexion à la base de données \nMessage : " + e.getMessage());

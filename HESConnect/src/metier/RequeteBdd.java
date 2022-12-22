@@ -251,29 +251,37 @@ public class RequeteBdd {
                     "ORDER BY count DESC " +
                     "LIMIT 1 " +
                     "MATCH (p)-[:CONNAIT]-(c) " +
-                    "MATCH (fi:FILIERE)<-[]-(p) " +
-                    "RETURN fi, p, c, count ";
+                    "MATCH (fi:FILIERE)<-[re]-(p) " +
+                    "RETURN p, c, count, fi, re ";
 
             Result result = bdd.run(rqte);
             if (!result.hasNext()) {
                 throw new Neo4jException("Erreur dans la requête");
             }
+            String persNomConnu = "";
+            String filNomConnu = "";
+            String relationNom = "";
+            int count = 0;
             while (result.hasNext()) {
                 Record record = result.next();
-                Node filiereNode = record.get("fi").asNode();
-                String filiereName = filiereNode.get("name").asString();
-                Node personNode = record.get("p").asNode();
-                String personName = personNode.get("name").asString();
-                Node connectionNode = record.get("c").asNode();
-                String connectionName = connectionNode.get("name").asString();
-                int count = record.get("count").asInt();
 
-                System.out.println("FILIERE: " + filiereName);
-                System.out.println("PERSON: " + personName);
-                System.out.println("CONNECTION: " + connectionName);
-                System.out.println("COUNT: " + count);
+                Node p = record.get("p").asNode();
+                Node c = record.get("c").asNode();
+                count = record.get("count").asInt();
+                Node fi = record.get("fi").asNode();
+                Relationship re = record.get("re").asRelationship();
+
+                persNomConnu = p.get("nom").asString();
+                filNomConnu = fi.get("nom").asString();
+                relationNom = re.get("nom").asString();
 
             }
+
+            System.out.println("FILIERE: " + filNomConnu);
+            System.out.println("PERSON: " + persNomConnu);
+            System.out.println("CONNECTION: " + relationNom);
+            System.out.println("COUNT: " + count);
+
 
 
         } catch (Exception e) {
