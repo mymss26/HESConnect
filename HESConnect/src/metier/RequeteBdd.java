@@ -146,6 +146,7 @@ public class RequeteBdd {
 
     public static void requeteSurLesEvenements(Session bdd) {
         System.out.println("3ème requête : Proposition d'événements en lien avec les compétences d'un etudiant et thématiques d'un événement ");
+        //test à faire
         String email = getMailAleatoireEtudiant().getMail();
         String rqte = "MATCH (p:PERSONNE {mail:'" + email + "'})-[:ETUDIE]->(fi:FILIERE)-[]-(c:COMPETENCE) " +
                 "WITH c,p,fi " +
@@ -159,6 +160,9 @@ public class RequeteBdd {
         List<String> listeThematique = new ArrayList<>();
         Node personne = null;
         Node filiere = null;
+        Personne etu = null;
+        Filiere fil = null;
+
         if (!result.hasNext()) {
             throw new Neo4jException("Il est possible que cette requête n'ai permis de trouver aucun résultat.");
         }
@@ -169,14 +173,21 @@ public class RequeteBdd {
             String thematique = rec.get("motT").asString();
             personne = rec.get("p").asNode();
             filiere = rec.get("fi").asNode();
-            if (!listeEvenements.contains(evenement.get("nom").asString())) {
-                listeEvenements.add(evenement.get("nom").asString());
+
+            etu = new Etudiant(personne.get("nom").asString(), personne.get("prenom").asString(), personne.get("mail").asString(), personne.get("genre").asString(),Integer.parseInt(personne.get("codePostal").asString()));
+            fil = new Filiere(filiere.get("nom").asString());
+            Evenement evt = new Evenement(evenement.get("nom").asString());
+
+
+            if (!listeEvenements.contains(evt.getNomEvenement())){ //evenement.get("nom").asString()
+                listeEvenements.add(evt.getNomEvenement()); //evenement.get("nom").asString()
             }
+
             listeCompetence.add(comp);
             listeThematique.add(thematique);
         }
         if (!listeEvenements.isEmpty()) {
-            System.out.println("Voici la liste d'événement(s) proposé(s) à " + personne.get("nom").asString() + " " + personne.get("prenom").asString() + "(" + filiere.get("nom").asString() + ")");
+            System.out.println("Voici la liste d'événement(s) proposé(s) à " + etu.getNom() + " " + etu.getPrenom() + " (" + fil.getNom() + ")");
             for (int i = 0; i < listeEvenements.size(); i++) {
                 System.out.println("- '" + listeEvenements.get(i) + "'");
             }
@@ -258,10 +269,19 @@ public class RequeteBdd {
             if (!result.hasNext()) {
                 throw new Neo4jException("Erreur dans la requête");
             }
-            String persNomConnu = "";
-            String filNomConnu = "";
-            String relationNom = "";
+
+            String nomPersonneConnue = "";
+            String prenomPersonneConnue = "";
+            String mailPersonneConnue = "";
+            String genrePersonneConnue = "";
+            int codePostalPersonneConnue = 0;
+
+            String nomFilierePersonneConnue = "";
+            String typeRelationPeronneConnueEtFiliere = "";
+            String typePersonne = "";
             int count = 0;
+            Personne personneAvecLePlusDeFollowers = null;
+            
             while (result.hasNext()) {
                 Record record = result.next();
 
@@ -271,17 +291,34 @@ public class RequeteBdd {
                 Node fi = record.get("fi").asNode();
                 Relationship re = record.get("re").asRelationship();
 
-                persNomConnu = p.get("nom").asString();
-                filNomConnu = fi.get("nom").asString();
-                relationNom = re.get("nom").asString();
+                nomPersonneConnue = p.get("nom").asString();
+                prenomPersonneConnue = p.get("prenom").asString();
+                mailPersonneConnue = p.get("mail").asString();
+                genrePersonneConnue = p.get("genre").asString();
+                codePostalPersonneConnue = Integer.parseInt(p.get("codePostal").asString());
 
+                nomFilierePersonneConnue = fi.get("nom").asString();
+
+                typeRelationPeronneConnueEtFiliere = re.type();
+            }
+            
+            Filiere filiereNom = new Filiere(nomFilierePersonneConnue);
+
+            if(typeRelationPeronneConnueEtFiliere.equals("ETUDIE")){
+                personneAvecLePlusDeFollowers = new Etudiant(nomPersonneConnue, prenomPersonneConnue, mailPersonneConnue, genrePersonneConnue, codePostalPersonneConnue);
+                typePersonne = "etudiant";
+            }else if(typeRelationPeronneConnueEtFiliere.equals("ENSEIGNE_POUR")){
+                personneAvecLePlusDeFollowers = new Prof(nomPersonneConnue, prenomPersonneConnue, mailPersonneConnue, genrePersonneConnue, codePostalPersonneConnue);
+                typePersonne = "professeur";
+            }else if (typeRelationPeronneConnueEtFiliere.equals("ASSISTE_POUR")){
+                personneAvecLePlusDeFollowers = new Assistant(nomPersonneConnue, prenomPersonneConnue, mailPersonneConnue, genrePersonneConnue, codePostalPersonneConnue);
+                typePersonne = "assistant";
             }
 
-            System.out.println("FILIERE: " + filNomConnu);
-            System.out.println("PERSON: " + persNomConnu);
-            System.out.println("CONNECTION: " + relationNom);
-            System.out.println("COUNT: " + count);
-
+            System.out.println("La personne avec le plus de followers ("+count+" personnes) est un " + typePersonne + " : ");
+            System.out.println("\tNom                   : "+personneAvecLePlusDeFollowers.getNom());
+            System.out.println("\tPrenom                : "+personneAvecLePlusDeFollowers.getPrenom());
+            System.out.println("\tEtudiant à la filière : "+filiereNom.getNom());
 
 
         } catch (Exception e) {
