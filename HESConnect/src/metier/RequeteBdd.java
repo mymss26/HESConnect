@@ -181,11 +181,11 @@ public class RequeteBdd {
                 System.out.println("- '" + listeEvenements.get(i) + "'");
             }
         }
+        System.out.println("********************************\n");
     }
 
 
     public static void barreDeRecherche(String theme, Session bdd) {
-        System.out.println("********************************");
         try {
             System.out.println("4ème requête : Barre de recherche");
             String rqte = "MATCH (e:EVENEMENT)-[]-(n) WHERE e.thematique CONTAINS $theme RETURN e, n ";
