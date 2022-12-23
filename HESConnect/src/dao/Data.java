@@ -11,7 +11,7 @@ import java.util.Random;
 
 public class Data {
 
-    private static final String FILENAME_Personne = "Personne_2.csv";
+    private static final String FILENAME_Personne = "PERSONNES.csv";
     private static final String FILENAME_Evenement = "EVENEMENTS.csv";
     private static final String FILENAME_Filiere = "FILIERES_HES.csv";
 

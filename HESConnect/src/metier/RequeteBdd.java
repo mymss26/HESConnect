@@ -43,7 +43,6 @@ public class RequeteBdd {
     //Requête #1 :trouve le chemin le plus court afin d'aider l'étudiant X en heds à trouver un developper en IG pour dev. son projet informatique
     public static void cheminLePlusCourt(Session bdd) {
         try {
-            System.out.println("1ere requête : Chemin le plus court");
             String email = getMailAleatoireEtudiantHeds().getMail();
             String rqte = "MATCH (etuHeds:PERSONNE{mail:'" + email + "'}), (heg:HES{nom:'HEG'}), (fi:FILIERE{nom:'Informatique de Gestion'}) " +
                     "MATCH (etuHeds) -[:ETUDIE]-> (r) " +
@@ -56,7 +55,7 @@ public class RequeteBdd {
             Result result = bdd.run(rqte);
 
             if (!result.hasNext()) {
-                throw new Neo4jException("Aucun résultat trouvé pour cette requête.");
+                throw new Neo4jException("Exception déclanchée pour la requête n°1 : Aucun résultat trouvé pour cette requête.");
             }
 
             // débute le parcours de la requête
@@ -94,7 +93,6 @@ public class RequeteBdd {
 
                 }
             }
-            System.out.println("********************************\n");
         } catch (NullPointerException e) {
             System.out.println("L'étudiant ne connait personne dans son réseau capable de l'aider à contacter une personne d'IG");
 
@@ -104,7 +102,6 @@ public class RequeteBdd {
 
     public static void requeteDeCalcul(Session bdd) {
         try {
-            System.out.println("2ème requête : Requête de calcul");
             String rqte = "MATCH (etu:PERSONNE)-[r:ETUDIE]->(n:FILIERE)-[:DISPENSEE_DANS]-(c:COMPETENCE) " +
                     "WITH c, count(etu) as num_etu " +
                     "ORDER BY num_etu DESC " +
@@ -117,7 +114,7 @@ public class RequeteBdd {
             Result result = bdd.run(rqte);
 
             if (!result.hasNext()) {
-                throw new Neo4jException("Erreur dans la requête");
+                throw new Neo4jException("Exception déclanchée pour la requête n°2 : Erreur de calcul.");
             }
 
             Node nomCompetence = null;
@@ -137,7 +134,6 @@ public class RequeteBdd {
                 System.out.println("\tFilière : " + filiere.getNom() + ", nombre d'étudiants : " + nombreEtu);
             }
             System.out.println("La compétence la plus demandée (" + totalEtu + " personnes) est : " + nomCompetence.get("competence").asString());
-            System.out.println("********************************\n");
         } catch (Exception e) {
             System.err.println("Une erreur s'est produite lors de l'exécution de la requête \nMessage : " + e.getMessage());
         }
@@ -145,14 +141,13 @@ public class RequeteBdd {
 
 
     public static void requeteSurLesEvenements(Session bdd) {
-        System.out.println("3ème requête : Proposition d'événements en lien avec les compétences d'un etudiant et thématiques d'un événement ");
-        //test à faire
         String email = getMailAleatoireEtudiant().getMail();
         String rqte = "MATCH (p:PERSONNE {mail:'" + email + "'})-[:ETUDIE]->(fi:FILIERE)-[]-(c:COMPETENCE) " +
-                "WITH c,p,fi " +
-                "MATCH (e:EVENEMENT)-[:PROPOSE]-(hes:HES) " +
-                "WITH c.competence as motC, e.thematique as motT,e,p,fi " + "where motT contains motC " +
-                "RETURN motC,motT,e,p,fi ";
+                      "WITH c,p,fi " +
+                      "MATCH (e:EVENEMENT)-[:PROPOSE]-(hes:HES) " +
+                      "WITH c.competence as motC, e.thematique as motT,e,p,fi " + "where motT contains motC " +
+                      "RETURN motC,motT,e,p,fi ";
+
         Result result = bdd.run(rqte);
 
         List<String> listeCompetence = new ArrayList<>();
@@ -164,7 +159,10 @@ public class RequeteBdd {
         Filiere fil = null;
 
         if (!result.hasNext()) {
-            throw new Neo4jException("Il est possible que cette requête n'ai permis de trouver aucun résultat.");
+            Session bddBackUp = Bdd.connect_db();
+            requeteSurLesEvenements(bddBackUp); /**Méthode recursive. A cause de l'aleatoire il se peut qu'on recupère un mauvais résutlat (mail qui n'est pas d'un étudiant) qui aurait alors déclanché l'exception ci-dessous*/
+            //throw new Neo4jException("Exception déclanchée pour la requête n°3 : Il est possible que cette requête n'ai permis de trouver aucun résultat.");
+
         }
         while (result.hasNext()) {
             Record rec = result.next();
@@ -179,8 +177,8 @@ public class RequeteBdd {
             Evenement evt = new Evenement(evenement.get("nom").asString());
 
 
-            if (!listeEvenements.contains(evt.getNomEvenement())){ //evenement.get("nom").asString()
-                listeEvenements.add(evt.getNomEvenement()); //evenement.get("nom").asString()
+            if (!listeEvenements.contains(evt.getNomEvenement())){
+                listeEvenements.add(evt.getNomEvenement());
             }
 
             listeCompetence.add(comp);
@@ -192,17 +190,15 @@ public class RequeteBdd {
                 System.out.println("- '" + listeEvenements.get(i) + "'");
             }
         }
-        System.out.println("********************************\n");
     }
 
 
     public static void barreDeRecherche(String theme, Session bdd) {
         try {
-            System.out.println("4ème requête : Barre de recherche");
             String rqte = "MATCH (e:EVENEMENT)-[]-(n) WHERE e.thematique CONTAINS $theme RETURN e, n ";
             Iterable<Record> result = bdd.run(rqte, Values.parameters(new Object[]{"theme", theme})).list();
             if (!result.iterator().hasNext()) {
-                throw new Neo4jException("Aucun événement trouvé avec le thème '" + theme + "'");
+                throw new Neo4jException("Exception déclanchée pour la requête n°4 : Aucun événement trouvé avec le thème '" + theme + "'");
             }
 
             String nomEcole = "";
@@ -246,7 +242,6 @@ public class RequeteBdd {
                 System.out.print("Ces événements sont proposés ");
             }
             System.out.println("par l' " + hes.getNom());
-            System.out.println("********************************\n");
         } catch (Exception e) {
             System.err.println("Erreur lors de l'exécution de la requête \nMessage : " + e.getMessage());
         }
@@ -256,7 +251,6 @@ public class RequeteBdd {
 
     public static void lePlusDeFollowers(Session bdd) {
         try {
-            System.out.println("5ème requête : Celui qui a le plus de followers");
             String rqte = "MATCH (p:PERSONNE)<-[:CONNAIT]-(c:PERSONNE) " +
                     "WITH p, COUNT(*) AS count " +
                     "ORDER BY count DESC " +
@@ -267,7 +261,7 @@ public class RequeteBdd {
 
             Result result = bdd.run(rqte);
             if (!result.hasNext()) {
-                throw new Neo4jException("Erreur dans la requête");
+                throw new Neo4jException("Exception déclanchée pour la requête n°5 : Erreur dans la requête");
             }
 
             String nomPersonneConnue = "";

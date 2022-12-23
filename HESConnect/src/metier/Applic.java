@@ -15,14 +15,32 @@ public class Applic {
 
          try{
              System.out.println("****LES REQUETES****\n");
-             RequeteBdd.cheminLePlusCourt(bdd);
-             RequeteBdd.requeteDeCalcul(bdd);
-             RequeteBdd.requeteSurLesEvenements(bdd);
-             //insérer un thème
-             String theme = "droit";
-             RequeteBdd.barreDeRecherche(theme.toUpperCase(), bdd);
 
+             System.out.println("1ere requête : Chemin le plus court");
+             RequeteBdd.cheminLePlusCourt(bdd);
+             System.out.println("********************************\n");
+
+             System.out.println("2ème requête : Requête de calcul");
+             RequeteBdd.requeteDeCalcul(bdd);
+             System.out.println("********************************\n");
+
+
+             System.out.println("3ème requête : Proposition d'événements en lien avec les compétences d'un etudiant et thématiques d'un événement ");
+             RequeteBdd.requeteSurLesEvenements(bdd);
+             System.out.println("********************************\n");
+
+
+             System.out.println("4ème requête : Barre de recherche");
+             //insérer un thème
+             String theme = "ASDF";
+             RequeteBdd.barreDeRecherche(theme.toUpperCase(), bdd);
+             System.out.println("********************************\n");
+
+
+             System.out.println("5ème requête : Celui qui a le plus de followers");
              RequeteBdd.lePlusDeFollowers(bdd);
+             System.out.println("********************************\n");
+
          }catch (Exception e){
              e.printStackTrace();
          }
